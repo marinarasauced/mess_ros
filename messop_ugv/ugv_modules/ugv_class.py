@@ -54,6 +54,7 @@ class UGV():
 
         # Update position:
         self.x_global_curr.Tx = msg.transform.translation.x
+        self.x_global_curr.Ty = msg.transform.translation.y
 
         # Correct measured quaternion orientation for calibrated orientation of tracked object in VICON tracker:
         q_meas = Quaternion()
