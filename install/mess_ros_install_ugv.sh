@@ -252,7 +252,7 @@ echo ""
 #
 sleep 5
 ip_address=$(ifconfig wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-cd mess_ros && catkin_make
+cd ~/mess_ros && catkin_make
 echo "export ROS_MASTER_URI=http://192.168.0.229:11311" >> /home/$user_name/.bashrc
 echo "export ROS_HOSTNAME=${ip_address}" >> /home/$user_name/.bashrc
 #
