@@ -100,7 +100,6 @@ sudo dpkg --add-architecture armhf
 sudo apt-get update
 sudo apt-get install libc6:armhf
 
-
 export OPENCR_PORT=/dev/ttyACM0
 export OPENCR_MODEL=${firmware_model}_noetic
 cd && rm -rf ./opencr_update.tar.bz2
