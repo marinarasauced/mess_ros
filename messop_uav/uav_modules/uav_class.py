@@ -3,7 +3,6 @@ import rospy
 from geometry_msgs.msg import PoseStamped, TransformStamped, Quaternion
 from mess_msgs.msg import StateUAV
 
-import numpy as np
 from quaternions import multiply_quats
 
 class UAV():
@@ -70,7 +69,6 @@ class UAV():
         x_local_curr.header.stamp = rospy.Time.now()
         x_local_curr.header.frame_id = "map"  # Indicates global coordinates
 
-
         # Set local position for mavros vision pose:
         x_local_curr.transform.translation.x = self.x_global_curr.Tx - self.vicon_offset_Tx
         x_local_curr.transform.translation.y = self.x_global_curr.Ty - self.vicon_offset_Ty
@@ -84,6 +82,14 @@ class UAV():
 
         #
         self.mavros_vp_.publish(x_local_curr)
+
+    # Store initial position in vicon frame for local transformation:
+    #   Input:  global state at first callback
+    def set_vicon_origin(self, state):
+        self.vicon_offset_Tx = state.Tx
+        self.vicon_offset_Ty = state.Ty
+        self.vicon_offset_Tz = state.Tz
+
 
 
 
