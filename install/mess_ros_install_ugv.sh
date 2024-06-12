@@ -151,6 +151,7 @@ echo ""
 echo ">>> {Writing netplan file}"
 echo ""
 
+sudo apt install net-tools
 echo "network:" >> /etc/netplan/01-network-manager-all.yaml
 ehco "  version: 2" >> /etc/netplan/01-network-manager-all.yaml
 echo "  renderer: networkd" >> /etc/netplan/01-network-manager-all.yaml
