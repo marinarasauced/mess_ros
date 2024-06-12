@@ -5,7 +5,7 @@ name_ros_distro=noetic
 user_name=$(whoami)
 
 #Install ROS Noetic using QBotics Labs ros_install_noetic.sh
-cd && #wget -c https://raw.githubusercontent.com/qboticslabs/ros_install_noetic/master/ros_install_noetic.sh && chmod +x ./ros_install_noetic.sh && echo "3" | ./ros_install_noetic.sh
+cd && wget -c https://raw.githubusercontent.com/qboticslabs/ros_install_noetic/master/ros_install_noetic.sh && chmod +x ./ros_install_noetic.sh && echo "3" | ./ros_install_noetic.sh
 source ~/.bashrc
 
 echo "#######################################################################################################################"
@@ -158,8 +158,8 @@ echo "  wifis:" >> /etc/netplan/01-network-manager-all.yaml
 ehco "    wlan0:" >> /etc/netplan/01-network-manager-all.yaml
 echo "      dhcp4: true" >> /etc/netplan/01-network-manager-all.yaml
 echo "      access-points:" >> /etc/netplan/01-network-manager-all.yaml
-#echo "        ${network_ssid}:" >> /etc/netplan/01-network-manager-all.yaml
-#echo "          password: ${network_pw}" >> /etc/netplan/01-network-manager-all.yaml
+echo "        ${network_ssid}:" >> /etc/netplan/01-network-manager-all.yaml
+echo "          password: ${network_pw}" >> /etc/netplan/01-network-manager-all.yaml
 
 netplan apply
 echo ""
