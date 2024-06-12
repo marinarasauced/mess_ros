@@ -228,16 +228,17 @@ echo ">>> {Task: Writing netplan file}"
 echo ""
 #
 sudo apt install net-tools
-echo "network:" >> /etc/netplan/01-network-manager-all.yaml
-ehco "  version: 2" >> /etc/netplan/01-network-manager-all.yaml
-echo "  renderer: networkd" >> /etc/netplan/01-network-manager-all.yaml
-echo "  wifis:" >> /etc/netplan/01-network-manager-all.yaml
-ehco "    wlan0:" >> /etc/netplan/01-network-manager-all.yaml
-echo "      dhcp4: true" >> /etc/netplan/01-network-manager-all.yaml
-echo "      access-points:" >> /etc/netplan/01-network-manager-all.yaml
-echo "        ${network_ssid}:" >> /etc/netplan/01-network-manager-all.yaml
-echo "          password: ${network_pw}" >> /etc/netplan/01-network-manager-all.yaml
-netplan apply
+
+sudo bash -c 'echo "network:" >> /etc/netplan/01-network-manager-all.yaml'
+sudo bash -c 'echo "  version: 2" >> /etc/netplan/01-network-manager-all.yaml'
+sudo bash -c 'echo "  renderer: networkd" >> /etc/netplan/01-network-manager-all.yaml'
+sudo bash -c 'echo "  wifis:" >> /etc/netplan/01-network-manager-all.yaml'
+sudo bash -c 'echo "    wlan0:" >> /etc/netplan/01-network-manager-all.yaml'
+sudo bash -c 'echo "      dhcp4: true" >> /etc/netplan/01-network-manager-all.yaml'
+sudo bash -c 'echo "      access-points:" >> /etc/netplan/01-network-manager-all.yaml'
+sudo bash -c "echo '        "${network_ssid}":' >> /etc/netplan/01-network-manager-all.yaml"
+sudo bash -c "echo '          password: "${network_pw}"' >> /etc/netplan/01-network-manager-all.yaml"
+sudo netplan apply
 #
 echo ""
 echo ">>> {Done: Wrote and applied netplan file}"
