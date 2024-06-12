@@ -174,6 +174,6 @@ echo "export ROS_MASTER_URI=http://192.168.0.229:11311" >> /home/$user_name/.bas
 echo "export ROS_HOSTNAME=${ip_address}" >> /home/$user_name/.bashrc
 
 echo ""
-echo ">>> {Done: ROS configured}"
+echo ">>> {Done: MESS-ROS configured}"
 echo ""
 echo "#######################################################################################################################"
