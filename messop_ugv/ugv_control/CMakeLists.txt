@@ -20,5 +20,6 @@ include_directories(
 
 catkin_install_python(PROGRAMS
   src/control.py
+  src/logger_legacy.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
