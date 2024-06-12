@@ -40,7 +40,8 @@ class UGV():
         self.topic_vicon = "/vicon/" + self.name + "/" + self.name
 
         # ROS publishers:
-        self.u_ = rospy.Publisher(self.topic_control_input, Twist, queue_size=10)        
+        self.u_ = rospy.Publisher(self.topic_control_input, Twist, queue_size=10) 
+        self.v_ = rospy.Publisher("/" + self.name + "/messop/logger/vicon", TransformStamped, queue_size=10)
         self.flag_ = rospy.Publisher(self.topic_messop_flag, Bool, queue_size=10)
 
         # ROS subsribers:
@@ -67,8 +68,20 @@ class UGV():
         # Update orientation:
         self.x_global_curr.Rz = Rz
 
+        # Publish calibrated pose to logger:
+        ts_true = TransformStamped()
+        ts_true.transform.translation.x = self.x_global_curr.Tx
+        ts_true.transform.translation.y = self.x_global_curr.Ty
+        ts_true.transform.translation.z = msg.transform.translation.z
+        ts_true.transform.rotation.x = q_true.x
+        ts_true.transform.rotation.y = q_true.y
+        ts_true.transform.rotation.z = q_true.z
+        ts_true.transform.rotation.w = q_true.w
 
-    
+        v_.publish(ts_true)
+
+
+
     # Publish control input to UGV.
     #   Input:  linear and angular velocities
     def controlUGV(self, u_lin, u_ang):
