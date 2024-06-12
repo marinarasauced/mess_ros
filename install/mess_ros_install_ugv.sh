@@ -159,8 +159,8 @@ echo "      dhcp4: true" >> /etc/netplan/01-network-manager-all.yaml
 echo "      access-points:" >> /etc/netplan/01-network-manager-all.yaml
 echo "        ${network_ssid}:" >> /etc/netplan/01-network-manager-all.yaml
 echo "          password: ${network_pw}" >> /etc/netplan/01-network-manager-all.yaml
-
 netplan apply
+
 echo ""
 echo ">>> {Done: Netplan written and applied}"
 echo ""
