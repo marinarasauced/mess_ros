@@ -66,16 +66,6 @@ def append_data(array, data):
 
 ##################################################################################
 
-def callback_calibration_parameters(data):
-    append_data(ct, rospy.get_time())
-    append_data(c1, data.C1)
-    append_data(c2, data.C2)
-    append_data(c3, data.C3)
-    append_data(c4, data.C4)
-    append_data(c5, data.C5)
-    append_data(c6, data.C6)
-    append_data(c7, data.C7)
-
 def callback_control_input(data):
     append_data(ut, rospy.get_time())
     append_data(uLin, data.linear.x)
@@ -94,12 +84,6 @@ def callback_imu_raw(data):
     append_data(imuAy, data.linear_acceleration.y)
     append_data(imuAz, data.linear_acceleration.z)
 
-def callback_odom_cal(data):
-    append_data(oct, rospy.get_time())
-    append_data(ocTx, data.Tx)
-    append_data(ocTy, data.Ty)
-    append_data(ocRz, data.Rz)
-
 def callback_odom_raw(data):
     append_data(ort, rospy.get_time())
     append_data(orTx, data.pose.pose.position.x)
@@ -109,12 +93,6 @@ def callback_odom_raw(data):
     append_data(orQy, data.pose.pose.orientation.y)
     append_data(orQz, data.pose.pose.orientation.z)
     append_data(orQw, data.pose.pose.orientation.w)
-
-def callback_state_onboard(data):
-    append_data(sot, rospy.get_time())
-    append_data(soTx, data.Tx)
-    append_data(soTy, data.Ty)
-    append_data(soRz, data.Rz)
 
 def callback_vicon_cal(data):
     append_data(vct, rospy.get_time())
@@ -148,17 +126,6 @@ if __name__=="__main__":
     # Initialize node:
     rospy.init_node("messlogger_ugv")
 
-    # Calibration parameters:
-    ct = []
-    c1 = []
-    c2 = []
-    c3 = []
-    c4 = []
-    c5 = []
-    c6 = []
-    c7 = []
-    rospy.Subscriber("/" + UGV_NAME + "/messop/logger/coefficients", CalibrateUGV, callback_calibration_parameters)
-
     # Control input:
     ut = []
     uLin = []
@@ -179,13 +146,6 @@ if __name__=="__main__":
     imuAz = []
     rospy.Subscriber("/" + UGV_NAME + "/imu", Imu, callback_imu_raw)
 
-    # Odometry calibrated:
-    oct = []
-    ocTx = []
-    ocTy = []
-    ocRz = []
-    rospy.Subscriber("/" + UGV_NAME + "/messop/logger/odom", StateUGV, callback_odom_cal)
-
     # Odometry raw:
     ort = []
     orTx = []
@@ -197,13 +157,6 @@ if __name__=="__main__":
     orQw = []
     rospy.Subscriber("/" + UGV_NAME + "/odom", Odometry, callback_odom_raw)
 
-    # Onboard state:
-    sot = []
-    soTx = []
-    soTy = []
-    soRz = []
-    rospy.Subscriber("/" + UGV_NAME + "/messop/logger/global", StateUGV, callback_state_onboard)
-    
     # VICON calibrated:
     vct = []
     vcTx = []
