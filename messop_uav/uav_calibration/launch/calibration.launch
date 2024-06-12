@@ -1,0 +1,5 @@
+<launch>
+
+    <node pkg="uav_calibration" type="uav_calibration.py" name="uav_calibration" output="screen"/>
+
+</launch>
