@@ -168,7 +168,7 @@ echo "##########################################################################
 echo ">>> {Step 6: Finalizing ROS Configuration}"
 echo ""
 
-ip_address=$(ifconfig lo | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+ip_address=$(ifconfig wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
 cd mess_ros && catkin_make
 echo "export ROS_MASTER_URI=http://192.168.0.229:11311" >> /home/$user_name/.bashrc
 echo "export ROS_HOSTNAME=${ip_address}" >> /home/$user_name/.bashrc
