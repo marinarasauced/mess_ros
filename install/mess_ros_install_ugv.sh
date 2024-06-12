@@ -20,6 +20,7 @@ echo ""
 echo ">>> {Making mess_ros workspace}"
 echo ""
 
+source ~/.bashrc
 cd && mkdir mess_ros && cd mess_ros && mkdir src && catkin_make
 echo "source ~/mess_ros/devel/setup.bash" >> /home/$user_name/.bashrc
 source ~/.bashrc
