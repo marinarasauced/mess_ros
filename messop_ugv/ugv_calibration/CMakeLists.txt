@@ -19,6 +19,6 @@ include_directories(
 )
 
 catkin_install_python(PROGRAMS
-  src/calibration.py
+  src/ugv_calibration.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

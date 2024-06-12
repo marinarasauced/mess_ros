@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(ugv_control)
+project(uav_calibration)
 
 find_package(catkin REQUIRED COMPONENTS
   rospy
@@ -19,7 +19,6 @@ include_directories(
 )
 
 catkin_install_python(PROGRAMS
-  src/ugv_control.py
-  src/logger_legacy.py
+  src/uav_calibration.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

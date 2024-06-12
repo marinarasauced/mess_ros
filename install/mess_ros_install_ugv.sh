@@ -4,7 +4,6 @@
 name_ros_distro=noetic 
 user_name=$(whoami)
 
-
 echo "#######################################################################################################################"
 echo ""
 echo ">>> {Starting MESS-ROS Configuration}"

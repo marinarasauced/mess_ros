@@ -96,6 +96,7 @@ def run_calibration(ugv, num_samples):
     data = {"x": q_diff.x, "y": q_diff.y, "z": q_diff.z, "w": q_diff.w}
     with open(os.path.abspath(os.path.dirname(__file__) + "/../../config/") + "calibration.json", "w") as f:
         json.dump(data, f)
+    print("Calibration file written, shutting down")
 
 ##################################################################################
 

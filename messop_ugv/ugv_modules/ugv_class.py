@@ -78,7 +78,7 @@ class UGV():
         ts_true.transform.rotation.z = q_true.z
         ts_true.transform.rotation.w = q_true.w
 
-        v_.publish(ts_true)
+        self.v_.publish(ts_true)
 
 
 

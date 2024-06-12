@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>ugv_control</name>
+  <name>uav_calibration</name>
   <version>1.0.0</version>
-  <description>The ugv_control package in correspondance with the Modular Experiment Software System.</description>
+  <description>The uav_calibration package in correspondance with the Modular Experiment Software System.</description>
   <url type="website">https://github.com/marinarasauced/mess_ros</url>
   <maintainer email="mjnelson@wpi.edu">Marina Nelson</maintainer>
   <author email="mjnelson@wpi.edu">Marina Nelson</author>

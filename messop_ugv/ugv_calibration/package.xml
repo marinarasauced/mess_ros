@@ -3,7 +3,7 @@
   <name>ugv_calibration</name>
   <version>1.0.0</version>
   <description>The ugv_calibration package in correspondance with the Modular Experiment Software System.</description>
-  <url type="website">https://github.com/marinarasauced/messop_ugv</url>
+  <url type="website">https://github.com/marinarasauced/mess_ros</url>
   <maintainer email="mjnelson@wpi.edu">Marina Nelson</maintainer>
   <author email="mjnelson@wpi.edu">Marina Nelson</author>
   <license>Fair Use</license>
