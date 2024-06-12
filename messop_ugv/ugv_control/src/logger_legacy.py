@@ -43,7 +43,7 @@ Communication ended
 ##################################################################################
 
 def log_data(name, head, data):
-    path = "/home/ubuntu/catkin_ws/logs/csv/"
+    path = "/home/ubuntu/mess_ros/logs/csv/"
     if not os.path.exists(path):
         os.makedirs(path)
     with open(path + name + ".csv", "w", newline="") as file:
