@@ -69,10 +69,18 @@ echo ""
 echo "#######################################################################################################################"
 echo ">>> {Step 1: ROS Noetic Installation}"
 echo ""
+echo ">>> {Task: Terminating unattended upgrades}"
+echo ""
+#
+sudo systemctl stop unattended-upgrades
+sudo systemctl disable unattended-upgrades
+sudo killall unattended-upgrades
+#
+echo ">>> {Done: Terminated unattended upgrades}"
+echo ""
 echo ">>> {Task: Setting up sources.list}"
 echo ""
 #
-sudo apt remove unattended-upgrades
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 #
 echo ""
