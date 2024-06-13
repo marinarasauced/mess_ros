@@ -8,6 +8,64 @@ echo "##########################################################################
 echo ""
 echo ">>> {Starting MESS-ROS Configuration}"
 echo ""
+echo ">>> {User: Enter desired turtlebot3 model for configuration}"
+echo ""
+echo "     [1. Burger]"
+echo ""
+echo "     [2. Waffle]"
+echo ""
+echo "     [3. WafflePi]"
+echo ""
+#
+read -p "Enter your turtlebot3 model (Default is 1):" answer1 
+case "$answer1" in
+  1)
+    firmware_model="burger"
+    turtlebot3_model="burger"
+    ;;
+  2)
+    firmware_model="waffle"
+    turtlebot3_model="waffle"
+    ;;
+  3)
+    firmware_model="waffle"
+    turtlebot3_model="waffle_pi"
+    ;;
+  * )
+    firmware_model="burger"
+    turtlebot3_model="burger"
+    ;;
+esac
+#
+echo ""
+echo ">>> {User: Enter desired lds model for configuration}"
+echo ""
+echo "     [1. LDS-01]"
+echo ""
+echo "     [2. LDS-02]"
+echo ""
+#
+read -p "Enter your lidar model (Default is 2):" answer2
+case "$answer2" in
+  1)
+    lidar_model="LDS-01"
+    ;;
+  2)
+    lidar_model="LDS-02"
+    ;;
+  * )
+    lidar_model="LDS-02"
+    ;;
+esac
+#
+echo ""
+echo ">>> {User: Enter you network SSID and password}"
+echo ""
+#
+read -p "Enter your network SSID:" network_ssid
+read -p "Enter your network password:" network_pw
+echo ""
+echo ""
 echo "#######################################################################################################################"
 echo ">>> {Step 1: ROS Noetic Installation}"
 echo ""
@@ -135,36 +193,6 @@ echo ""
 echo "#######################################################################################################################"
 echo ">>> {Step 5: Setting up OpenCR}"
 echo ""
-echo ">>> {User: Enter desired turtlebot3 model for configuration}"
-echo ""
-echo "     [1. Burger]"
-echo ""
-echo "     [2. Waffle]"
-echo ""
-echo "     [3. WafflePi]"
-echo ""
-#
-read -p "Enter your turtlebot3 model (Default is 1):" answer1 
-case "$answer1" in
-  1)
-    firmware_model="burger"
-    turtlebot3_model="burger"
-    ;;
-  2)
-    firmware_model="waffle"
-    turtlebot3_model="waffle"
-    ;;
-  3)
-    firmware_model="waffle"
-    turtlebot3_model="waffle_pi"
-    ;;
-  * )
-    firmware_model="burger"
-    turtlebot3_model="burger"
-    ;;
-esac
-#
-echo ""
 echo ">>> {Task: Configuring turtlebot3 OpenCR for selected model}"
 echo ""
 #
@@ -183,27 +211,6 @@ cd ./opencr_update
 echo ""
 echo ">>> {Task: Updated OpenCR firmware for selected model}"
 echo ""
-echo ">>> {User: Enter desired lds model for configuration}"
-echo ""
-echo "     [1. LDS-01]"
-echo ""
-echo "     [2. LDS-02]"
-echo ""
-#
-read -p "Enter your lidar model (Default is 2):" answer2
-case "$answer2" in
-  1)
-    lidar_model="LDS-01"
-    ;;
-  2)
-    lidar_model="LDS-02"
-    ;;
-  * )
-    lidar_model="LDS-02"
-    ;;
-esac
-#
-echo ""
 echo ">>> {Task: Configuring environment for selected turtlebot3 and lidar models}"
 echo ""
 #
@@ -217,18 +224,10 @@ echo ""
 echo "#######################################################################################################################"
 echo ">>> {Step 6: Configuring Netplan}"
 echo ""
-echo ">>> {User: Enter you network SSID and password}"
-echo ""
-#
-read -p "Enter your network SSID:" network_ssid
-read -p "Enter your network password:" network_pw
-#
-echo ""
 echo ">>> {Task: Writing netplan file}"
 echo ""
 #
 sudo apt install net-tools
-
 sudo bash -c 'echo "network:" >> /etc/netplan/01-network-manager-all.yaml'
 sudo bash -c 'echo "  version: 2" >> /etc/netplan/01-network-manager-all.yaml'
 sudo bash -c 'echo "  renderer: networkd" >> /etc/netplan/01-network-manager-all.yaml'
