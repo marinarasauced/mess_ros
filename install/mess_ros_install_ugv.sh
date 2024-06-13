@@ -137,13 +137,11 @@ echo ""
 echo ">>> {Task: Creating mess_ros workspace}"
 echo ""
 #
-source /opt/ros/noetic/setup.bash
 cd 
 mkdir mess_ros
 cd ~/mess_ros
 mkdir src
 catkin_make
-source ~/mess_ros/devel/setup.bash
 echo "source ~/mess_ros/devel/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 #
@@ -262,6 +260,7 @@ ip_address=$(ifconfig wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
 cd ~/mess_ros && catkin_make
 echo "export ROS_MASTER_URI=http://192.168.0.229:11311" >> /home/$user_name/.bashrc
 echo "export ROS_HOSTNAME=${ip_address}" >> /home/$user_name/.bashrc
+source ~/.bashrc
 #
 echo ""
 echo ">>> {Done: Finalized environment configuration}"
