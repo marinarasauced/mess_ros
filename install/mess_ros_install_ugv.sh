@@ -74,7 +74,7 @@ echo ""
 #
 sudo systemctl stop unattended-upgrades
 sudo systemctl disable unattended-upgrades
-sudo killall unattended-upgrades
+sudo pkill -f unattended-upgrades
 #
 echo ">>> {Done: Terminated unattended upgrades}"
 echo ""
