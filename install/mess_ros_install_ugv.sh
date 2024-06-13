@@ -89,7 +89,7 @@ echo ""
 echo ">>> {Task: Setting up keys}"
 echo ""
 #
-sudo apt install curl
+sudo apt install -y curl
 curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
 #
 echo ""
@@ -99,7 +99,7 @@ echo ">>> {Task: Installing ROS Noetic base}"
 echo ""
 #
 sudo apt update
-sudo apt install ros-noetic-ros-base
+sudo apt install -y ros-noetic-ros-base
 #
 echo ""
 echo ">>> {Done: Installed ROS Noetic base}"
@@ -116,7 +116,7 @@ echo ""
 echo ">>> {Task: Installing dependencies}"
 echo ""
 #
-sudo apt install python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
+sudo apt install -y python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
 #
 echo ""
 echo ">>> {Done: Installed dependencies}"
@@ -124,7 +124,6 @@ echo ""
 echo ">>> {Task: Initializing dependencies}"
 echo ""
 #
-sudo apt install python3-rosdep
 sudo rosdep init
 rosdep update
 #
@@ -159,7 +158,7 @@ echo ">>> {Task: Adding turtlebot3 packages to mess_ros workspace}"
 echo ""
 #
 sudo apt update
-sudo apt install libudev-dev
+sudo apt install -y libudev-dev
 cd ~/mess_ros/src
 git clone https://github.com/ROBOTIS-GIT/turtlebot3.git
 git clone https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
@@ -189,7 +188,7 @@ echo ""
 echo ">>> {Task: Updating turtlebot3_bringup files}"
 echo ""
 #
-sudo apt-get install libjsoncpp-dev
+sudo apt-get install -y libjsoncpp-dev
 cd ~/mess_ros/src/turtlebot3/turtlebot3_bringup
 rm -r CMakeLists.txt src/turtlebot3_diagnostics.cpp
 cp ~/mess_ros/src/mess_ros/messop_ugv/config/move2turtlebot3_bringup/CMakeLists.txt ~/mess_ros/src/turtlebot3/turtlebot3_bringup
@@ -207,7 +206,7 @@ echo ""
 #
 sudo dpkg --add-architecture armhf
 sudo apt-get update
-sudo apt-get install libc6:armhf
+sudo apt-get install -y libc6:armhf
 export OPENCR_PORT=/dev/ttyACM0
 export OPENCR_MODEL=${firmware_model}_noetic
 cd
@@ -236,7 +235,7 @@ echo ""
 echo ">>> {Task: Writing netplan file}"
 echo ""
 #
-sudo apt install net-tools
+sudo apt install -y net-tools
 sudo bash -c 'echo "network:" >> /etc/netplan/01-network-manager-all.yaml'
 sudo bash -c 'echo "  version: 2" >> /etc/netplan/01-network-manager-all.yaml'
 sudo bash -c 'echo "  renderer: networkd" >> /etc/netplan/01-network-manager-all.yaml'
