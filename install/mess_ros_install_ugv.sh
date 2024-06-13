@@ -107,8 +107,8 @@ echo ""
 echo ">>> {Task: Setting up environment}"
 echo ""
 #
-source /opt/ros/noetic/setup.bash
 echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+source ~/.bashrc
 #
 echo ""
 echo ">>> {Done: Set up environment}"
