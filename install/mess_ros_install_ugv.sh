@@ -69,8 +69,6 @@ echo ""
 echo "#######################################################################################################################"
 echo ">>> {Step 1: ROS Noetic Installation}"
 echo ""
-echo ">>> {Task: Terminating unattended upgrades}"
-echo ""
 echo ">>> {Task: Setting up sources.list}"
 echo ""
 #
