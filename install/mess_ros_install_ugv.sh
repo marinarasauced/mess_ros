@@ -90,7 +90,7 @@ echo ">>> {Task: Installing ROS Noetic base}"
 echo ""
 #
 sudo apt update
-sudo apt install -y ros-noetic-ros-desktop
+sudo apt install -y ros-noetic-desktop
 #
 echo ""
 echo ">>> {Done: Installed ROS Noetic base}"
