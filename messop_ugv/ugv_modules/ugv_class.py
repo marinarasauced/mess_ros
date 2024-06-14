@@ -150,6 +150,9 @@ class UGV():
     # Transition between vertices.
     #    Note:  this loop will run until the node is shutdown.
     def transitionUGV(self):
+        flag2MESS = Bool()
+        flag2MESS.data = True
+        self.flag_.publish
         while not rospy.is_shutdown():
             rospy.loginfo("Waiting for new vertex ...")
 
@@ -162,6 +165,9 @@ class UGV():
 
             # Retrieve operation index:
             op = vertex.index
+            flag2MESS = Bool()
+            flag2MESS.data = False
+            self.flag_.publish(flag2MESS)
 
             # Operation one (rotation):
             if op == 1:
