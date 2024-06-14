@@ -178,7 +178,7 @@ echo ""
 cd /home/$user_name/mess_ros/src
 git clone https://github.com/marinarasauced/mess_ros.git
 cd /home/$user_name/mess_ros/src/mess_ros
-rm -r install/ messop_uav/
+rm -r install/ messop_uav/ mess_modules/ experiments/
 #
 echo ""
 echo ">>> {Done: Added mess_ros packages to mess_ros workspace}"
