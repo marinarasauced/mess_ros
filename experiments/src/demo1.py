@@ -41,9 +41,11 @@ def main():
     # Create list of vehicles:
     ugvs = [burger2]
     uavs = []
+    vehicles = [ugvs, uavs]
 
     launch_vehicles(ugvs, uavs)
-
+    # run experiment ... -> need to implement likely via publishers and subscibers -> flagging system (at least for ugv)
+    download_logs(vehicles)
 
     #
     rospy.spin()

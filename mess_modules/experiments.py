@@ -55,10 +55,23 @@ def upload_cache(vehicle):
     remote_path = "~/mess_ros/src/mess_ros/"
     upload(vehicle, local_path, remote_path)
 
-def download_logs(vehicle):
+def download_logs(vehicles, write_directory):
+    write_directory = get_write_directory()
+    remote_path = "~/mess_ros/logs/"
+    for vehicle in vehicles:
+        local_path = os.path.join(write_directory, f"{vehicle.name}/")
+        download(vehicle, local_path, remote_path)
+
+def get_write_directory():
     path2logs = get_path2logs()
     write_path = os.path.join(path2logs, datetime.datetime.now().strftime("%Y-%m-%d"))
-    write_dir = get_write_directory_index(write_path)
-
-def get_write_directory_index(write_path):
-    
+    now = datetime.datetime.now().strftime("%H-%M-%S")
+    trials = [d for d in os.listdir(write_path) if os.path.isdir(os.path.join(write_path, d))]
+    last_trial = max([int(d.split('-')[0]) for d in trials]) if trials else 0
+    this_trial = last_trial + 1
+    this_trial = f"{this_trial:03d}"[-3:]
+    write_directory = f"{this_trial}-{now}"
+    write_directory = os.path.join(write_path, write_directory)
+    if not os.path.exists(write_directory):
+        os.makedirs(write_directory)
+    return write_directory
