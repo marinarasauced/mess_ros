@@ -92,7 +92,7 @@ echo ">>> {Task: Installing ROS Noetic base}"
 echo ""
 #
 sudo apt update
-sudo apt install -y ros-noetic-ros-base
+sudo apt install -y ros-noetic-ros-desktop
 #
 echo ""
 echo ">>> {Done: Installed ROS Noetic base}"
@@ -134,7 +134,6 @@ cd
 mkdir mess_ros
 cd /home/$user_name/mess_ros
 mkdir src
-source /opt/ros/noetic/setup.bash
 catkin_make
 echo "source /home/$user_name/mess_ros/devel/setup.bash" >> /home/$user_name/.bashrc
 source /home/$user_name/.bashrc
