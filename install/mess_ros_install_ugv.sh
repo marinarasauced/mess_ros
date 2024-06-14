@@ -2,7 +2,7 @@
 # Author: Marina Nelson
 
 name_ros_distro=noetic 
-user_name=$(whoami)
+user_name=ubuntu
 
 echo "#######################################################################################################################"
 echo ""
@@ -69,8 +69,6 @@ echo ""
 echo "#######################################################################################################################"
 echo ">>> {Step 1: ROS Noetic Installation}"
 echo ""
-echo ">>> {Task: Terminating unattended upgrades}"
-echo ""
 echo ">>> {Task: Setting up sources.list}"
 echo ""
 #
@@ -92,7 +90,7 @@ echo ">>> {Task: Installing ROS Noetic base}"
 echo ""
 #
 sudo apt update
-sudo apt install -y ros-noetic-ros-desktop
+sudo apt install -y ros-noetic-desktop
 #
 echo ""
 echo ">>> {Done: Installed ROS Noetic base}"

@@ -1,4 +1,5 @@
 
+import datetime
 import json
 import os.path
 import subprocess
@@ -17,6 +18,9 @@ def get_path2cache():
 def get_path2experiments():
     path2cache = os.path.abspath(os.path.join(os.path.dirname(__file__), "../experiments/"))
     return path2cache
+
+def get_path2logs():
+    path2logs = os.path.abspath(os.path.join(os.path.dirname(__file__), "../logs/"))
 
 def get_path2write(name):
     path2cache = get_path2cache()
@@ -50,3 +54,7 @@ def upload_cache(vehicle):
     local_path = get_path2experiments()
     remote_path = "~/mess_ros/src/mess_ros/"
     upload(vehicle, local_path, remote_path)
+
+def download_logs(vehicle):
+    path2logs = get_path2logs()
+    write_path = os.path.join(path2logs, datetime.datetime.now().strftime("%Y-%m-%d"))
