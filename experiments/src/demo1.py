@@ -27,7 +27,7 @@ def main():
 
 
     # Add vehicles:
-    burger2 = UGV("burger2")
+    burger2 = UGV("burger2", "192.168.0.58", "cowlagilab01")
     burger2.add_node(ugv_control)
     burger2.generate_launch_description()
 

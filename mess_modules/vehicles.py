@@ -7,17 +7,14 @@ def get_path2cache():
     return path2cache
 
 class UGV():
-    def __init__(self, name):
+    def __init__(self, name, ip, password):
         self.name = name
+        self.ip = ip
+        self.password = password
         
-        f_path = os.path.abspath(os.path.join(os.path.dirname(__file__), f"vehicles/{self.name}.json"))
-        f_ = open(f_path)
-        f_data = json.load(f_)
-        self.ip = f_data["ip"]
-
         self.nodes = []
         self.path2cache = get_path2cache()
-        self.path2write = get_path2write
+        self.path2write = get_path2write()
 
     #
     def add_node(self, node):
