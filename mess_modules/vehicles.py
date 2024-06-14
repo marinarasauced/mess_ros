@@ -1,23 +1,51 @@
-
-import json
+from paramiko import SSHClient, AutoAddPolicy
+from scp import SCPClient
 import os.path
+import subprocess
+import textwrap
 
-def get_path2cache():
-    path2cache = os.path.abspath(os.path.join(os.path.dirname(__file__), "../experiments/cache/"))
-    return path2cache
+from mess_modules.experiments import *
 
-def get_path2write(name):
-    path2cache = get_path2cache()
-    path2write = os.path.abspath(os.path.join(path2cache, f"{name}/"))
-    if not os.path.exists(path2write):
-        os.mkdir(path2write)
-    return path2write
+def upload(vehicle, local_path, remote_path):
+    ssh = init_client(host=vehicle.ip, user="ubuntu", password=f"{vehicle.password}", port=-1)
+    scp = SCPClient(ssh.get_transport())
+    scp.put(local_path, recursive=True, remote_path=remote_path)
+    scp.close()
+    ssh.close()
+
+def download(vehicle, local_path, remote_path):
+    ssh = init_client(host=vehicle.ip, user="ubuntu", password=f"{vehicle.password}", port=-1)
+    scp = SCPClient(ssh.get_transport())
+    scp.get(remote_path=remote_path, local_path=local_path, recursive=True) 
+    scp.close()
+    ssh.close()
+
+def launch_vehicle(vehicle):
+    ssh = init_client(host=vehicle.ip, user="ubuntu", password=f"{vehicle.password}", port=-1)
+    ssh.exec_command(f"cp ~/mess_ros/src/mess_ros/experiments/cache/{vehicle.name}/config.json ~/mess_ros/src/mess_ros/messop_ugv/config/config.json")
+    ssh.exec_command(f"source /opt/ros/noetic/setup.bash && cd ~/mess_ros && catkin_make")
+    ssh.exec_command(f"source /opt/ros/noetic/setup.bash && source ~/mess_ros/devel/setup.bash && export ROS_MASTER_URI=http://192.168.0.229:11311 && export ROS_HOSTNAME={vehicle.ip} && export TURTLEBOT3_MODEL={vehicle.tb3_model} && export LDS_MODEL={vehicle.lds_model} && roslaunch experiments {vehicle.launch_name}")
+    ssh.close()
+    print(1)
+
+def init_client(host, user, password, port):
+    ssh = SSHClient()
+    ssh.load_system_host_keys()
+    ssh.set_missing_host_key_policy(AutoAddPolicy())
+    if port == -1:
+        ssh.connect(host, username=user, password=password)
+    else:
+        ssh.connect(host, port, username=user, password=password)
+    return ssh
 
 class UGV():
-    def __init__(self, name, ip, password):
+    def __init__(self, name, ip, password, experiment, tb3_model, lds_model):
         self.name = name
         self.ip = ip
         self.password = password
+        self.experiment = experiment
+        self.tb3_model = tb3_model
+        self.lds_model = lds_model
         
         self.nodes = []
         self.path2cache = get_path2cache()
@@ -95,10 +123,36 @@ class UGV():
             content += node
         content += content2
 
+        content = textwrap.dedent(content).strip()
+
         self.launch_description = content
-        self.write_launch_description()
+        self.launch_name = self.experiment + f"_{self.name}" + ".launch"
+        path2write = os.path.abspath(os.path.join(self.path2write, self.launch_name))
+        self.write2cache(path2write, self.launch_description)
 
     #
-    def write_launch_description(self):
-        
+    def generate_config_description(self, calibration_samples, max_lin_vel_ratio, max_ang_vel_ratio, error_tol_tx, error_tol_ty, error_tol_rz, occlusion_tol, k_ty, k_rz):
+        content = textwrap.dedent(f"""
+        {{
+            "ugv_name": "{self.name}",
+            "calibration_samples": {calibration_samples},
+            "max_lin_vel_ratio": {max_lin_vel_ratio},
+            "max_ang_vel_ratio": {max_ang_vel_ratio},
+            "error_tol_tx": {error_tol_tx},
+            "error_tol_ty": {error_tol_ty},
+            "error_tol_rz": {error_tol_rz},
+            "occlusion_tol": {occlusion_tol},
+            "k_ty": {k_ty},
+            "k_rz": {k_rz}
+        }}
+        """)
+        name2write = os.path.abspath(os.path.join(self.path2write, "config.json"))
+        self.config_description = content.strip()
+        self.write2cache(name2write, self.config_description)
+
+    #
+    def write2cache(self, path, content):
+        with open(path, "w") as file:
+            file.write(content)
+
 

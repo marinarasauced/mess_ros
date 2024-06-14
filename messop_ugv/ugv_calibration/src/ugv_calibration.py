@@ -9,7 +9,7 @@ import os.path
 import time
 import sys
 
-sys.path.append(os.path.abspath(os.path.join(os.path.abspath(__file__), "../../..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.abspath(__file__), "../../../")))
 
 from ugv_modules.quaternions import convert_eul2quat, invert_quat, multiply_quats
 from ugv_modules.ugv_class import UGV

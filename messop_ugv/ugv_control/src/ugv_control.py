@@ -5,7 +5,7 @@ import rospy
 import os.path
 import sys
 
-sys.path.append(os.path.abspath(os.path.join(os.path.abspath(__file__), "../../..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.abspath(__file__), "../../../")))
 
 from ugv_modules.ugv_class import UGV
 from ugv_modules.ugv_functions import get_max_velocities, load_config_from_node, load_calibration_from_node
