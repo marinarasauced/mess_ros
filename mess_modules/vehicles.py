@@ -1,10 +1,10 @@
 from paramiko import SSHClient, AutoAddPolicy
 from scp import SCPClient
 import os.path
-import subprocess
 import textwrap
 
-from mess_modules.experiments import *
+from mess_modules.experiments import get_path2cache, get_path2write
+from mess_modules.nodes import *
 
 def upload(vehicle, local_path, remote_path):
     ssh = init_client(host=vehicle.ip, user="ubuntu", password=f"{vehicle.password}", port=-1)

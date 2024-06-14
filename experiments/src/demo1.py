@@ -11,33 +11,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.abspath(__file__), "../../.
 
 from mess_modules.experiments import * 
 from mess_modules.vehicles import *
-from mess_modules.nodes import UGVNode
+from mess_modules.nodes import *
 
-def load_ugv(name, experiment):
-    path2client = os.path.abspath(os.path.join(os.path.dirname(__file__), f"../../mess_modules/clients/{name}.json"))
-    f_ = open(path2client)
-    f_data = json.load(f_)
-    ugv = UGV(
-        name=f_data["name"], 
-        ip=f_data["ip"], 
-        password=f_data["password"], 
-        experiment=experiment,
-        tb3_model=f_data["model"],
-        lds_model=f_data["lds"]
-    )
-    return ugv
 
-def launch_vehicles(ugvs, uavs):
-    for ugv in ugvs:
-        upload_cache(ugv)
-        launch_ugv(ugv)
-    for uav in uavs:
-        pass
-
-def upload_cache(vehicle):
-    local_path = get_path2experiments()
-    remote_path = "~/mess_ros/src/mess_ros/"
-    upload(vehicle, local_path, remote_path)
 
 
 
