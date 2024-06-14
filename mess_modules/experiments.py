@@ -58,3 +58,7 @@ def upload_cache(vehicle):
 def download_logs(vehicle):
     path2logs = get_path2logs()
     write_path = os.path.join(path2logs, datetime.datetime.now().strftime("%Y-%m-%d"))
+    write_dir = get_write_directory_index(write_path)
+
+def get_write_directory_index(write_path):
+    
