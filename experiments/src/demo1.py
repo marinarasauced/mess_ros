@@ -27,10 +27,12 @@ def load_ugv(name, experiment):
     )
     return ugv
 
-def launch_vehicles(vehicles):
-    for vehicle in vehicles:
-        upload_cache(vehicle)
-        launch_vehicle(vehicle)
+def launch_vehicles(ugvs, uavs):
+    for ugv in ugvs:
+        upload_cache(ugv)
+        launch_ugv(ugv)
+    for uav in uavs:
+        pass
 
 def upload_cache(vehicle):
     local_path = get_path2experiments()
@@ -42,6 +44,9 @@ def upload_cache(vehicle):
 ##################################################################################
 
 def main():
+
+    # Start VICON bridge:
+    #subprocess.Popen("roslaunch vicon_bridge vicon.launch", shell=True)
 
     # Initialize node:
     clear_cache()
@@ -55,14 +60,13 @@ def main():
     burger2 = load_ugv("burger2", experiment)
     burger2.add_node(ugv_control)
     burger2.generate_launch_description()  # must be after all nodes are added
-    burger2.generate_config_description(calibration_samples=10000000, max_lin_vel_ratio=0.5, max_ang_vel_ratio=0.3, error_tol_tx=0.02, error_tol_ty=0.02, error_tol_rz=0.01, occlusion_tol=0.1, k_ty=4.6092, k_rz=2.6779)
+    burger2.generate_config_description(calibration_samples=1000, max_lin_vel_ratio=0.5, max_ang_vel_ratio=0.3, error_tol_tx=0.02, error_tol_ty=0.02, error_tol_rz=0.01, occlusion_tol=0.1, k_ty=4.6092, k_rz=2.6779)
 
     # Create list of vehicles:
     ugvs = [burger2]
     uavs = []
-    vehicles = ugvs + uavs
 
-    launch_vehicles(vehicles)
+    launch_vehicles(ugvs, uavs)
 
 
     #

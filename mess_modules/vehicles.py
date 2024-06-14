@@ -20,11 +20,13 @@ def download(vehicle, local_path, remote_path):
     scp.close()
     ssh.close()
 
-def launch_vehicle(vehicle):
+def launch_ugv(vehicle):
     ssh = init_client(host=vehicle.ip, user="ubuntu", password=f"{vehicle.password}", port=-1)
     ssh.exec_command(f"cp ~/mess_ros/src/mess_ros/experiments/cache/{vehicle.name}/config.json ~/mess_ros/src/mess_ros/messop_ugv/config/config.json")
     ssh.exec_command(f"source /opt/ros/noetic/setup.bash && cd ~/mess_ros && catkin_make")
-    ssh.exec_command(f"source /opt/ros/noetic/setup.bash && source ~/mess_ros/devel/setup.bash && export ROS_MASTER_URI=http://192.168.0.229:11311 && export ROS_HOSTNAME={vehicle.ip} && export TURTLEBOT3_MODEL={vehicle.tb3_model} && export LDS_MODEL={vehicle.lds_model} && roslaunch experiments {vehicle.launch_name}")
+    stdin, stdout, stderr = ssh.exec_command(f"source /opt/ros/noetic/setup.bash && source ~/mess_ros/devel/setup.bash && export ROS_MASTER_URI=http://192.168.0.229:11311 && export ROS_HOSTNAME={vehicle.ip} && export TURTLEBOT3_MODEL={vehicle.tb3_model} && export LDS_MODEL={vehicle.lds_model} && roslaunch experiments {vehicle.launch_name}")
+    print(stdout.read())
+    print(stderr.read())
     ssh.close()
     print(1)
 
@@ -113,7 +115,7 @@ class UGV():
             <node pkg="turtlebot3_bringup" type="turtlebot3_diagnostics" name="$(arg ugv_name)_turtlebot3_diagnostics" output="screen"/>
         """
         content2 = """
-            <node pkg="ugv_control" type="logger_legacy.py" name="$(arg ugv_name)_logger" output="screen"/>
+            
 
         </launch>
         """
