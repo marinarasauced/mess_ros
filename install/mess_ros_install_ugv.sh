@@ -69,6 +69,8 @@ echo ""
 echo "#######################################################################################################################"
 echo ">>> {Step 1: ROS Noetic Installation}"
 echo ""
+echo ">>> {Task: Terminating unattended upgrades}"
+echo ""
 echo ">>> {Task: Setting up sources.list}"
 echo ""
 #
@@ -90,7 +92,7 @@ echo ">>> {Task: Installing ROS Noetic base}"
 echo ""
 #
 sudo apt update
-sudo apt install -y ros-noetic-desktop
+sudo apt install -y ros-noetic-ros-desktop
 #
 echo ""
 echo ">>> {Done: Installed ROS Noetic base}"
@@ -98,8 +100,8 @@ echo ""
 echo ">>> {Task: Setting up environment}"
 echo ""
 #
-echo "source /opt/ros/noetic/setup.bash" >> /home/$user_name/.bashrc
-source /home/$user_name/.bashrc
+echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+source ~/.bashrc
 #
 echo ""
 echo ">>> {Done: Set up environment}"
@@ -130,11 +132,11 @@ echo ""
 #
 cd 
 mkdir mess_ros
-cd /home/$user_name/mess_ros
+cd ~/mess_ros
 mkdir src
 catkin_make
-echo "source /home/$user_name/mess_ros/devel/setup.bash" >> /home/$user_name/.bashrc
-source /home/$user_name/.bashrc
+echo "source ~/mess_ros/devel/setup.bash" >> ~/.bashrc
+source ~/.bashrc
 #
 echo ""
 echo ">>> {Done: Created mess_ros workspace}"
@@ -148,11 +150,11 @@ echo ""
 #
 sudo apt update
 sudo apt install -y libudev-dev
-cd /home/$user_name/mess_ros/src
+cd ~/mess_ros/src
 git clone https://github.com/ROBOTIS-GIT/turtlebot3.git
 git clone https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
 git clone -b develop https://github.com/ROBOTIS-GIT/ld08_driver.git
-cd /home/$user_name/mess_ros/src/turtlebot3
+cd ~/mess_ros/src/turtlebot3
 git pull
 rm -r turtlebot3_description/ turtlebot3_teleop/ turtlebot3_navigation/ turtlebot3_slam/ turtlebot3_example/
 #
@@ -166,9 +168,9 @@ echo ""
 echo ">>> {Task: Added mess_ros packages to mess_ros workspace}"
 echo ""
 #
-cd /home/$user_name/mess_ros/src
+cd ~/mess_ros/src
 git clone https://github.com/marinarasauced/mess_ros.git
-cd /home/$user_name/mess_ros/src/mess_ros
+cd ~/mess_ros/src/mess_ros
 rm -r install/ messop_uav/ mess_modules/ experiments/
 #
 echo ""
@@ -178,10 +180,10 @@ echo ">>> {Task: Updating turtlebot3_bringup files}"
 echo ""
 #
 sudo apt-get install -y libjsoncpp-dev
-cd /home/$user_name/mess_ros/src/turtlebot3/turtlebot3_bringup
+cd ~/mess_ros/src/turtlebot3/turtlebot3_bringup
 rm -r CMakeLists.txt src/turtlebot3_diagnostics.cpp
-cp /home/$user_name/mess_ros/src/mess_ros/messop_ugv/config/move2turtlebot3_bringup/CMakeLists.txt /home/$user_name/mess_ros/src/turtlebot3/turtlebot3_bringup
-cp /home/$user_name/mess_ros/src/mess_ros/messop_ugv/config/move2turtlebot3_bringup/turtlebot3_diagnostics.cpp /home/$user_name/mess_ros/src/turtlebot3/turtlebot3_bringup/src
+cp ~/mess_ros/src/mess_ros/messop_ugv/config/move2turtlebot3_bringup/CMakeLists.txt ~/mess_ros/src/turtlebot3/turtlebot3_bringup
+cp ~/mess_ros/src/mess_ros/messop_ugv/config/move2turtlebot3_bringup/turtlebot3_diagnostics.cpp ~/mess_ros/src/turtlebot3/turtlebot3_bringup/src
 #
 echo ""
 echo ">>> {Done: Updated turtlebot3_bringup files}"
@@ -211,8 +213,8 @@ echo ""
 echo ">>> {Task: Configuring environment for selected turtlebot3 and lidar models}"
 echo ""
 #
-echo "export TURTLEBOT3_MODEL=${turtlebot3_model}" >> /home/$user_name/.bashrc
-echo "export LDS_MODEL=${lidar_model}" >> /home/$user_name/.bashrc
+echo "export TURTLEBOT3_MODEL=${turtlebot3_model}" >> ~/.bashrc
+echo "export LDS_MODEL=${lidar_model}" >> ~/.bashrc
 #
 echo ""
 echo ">>> {Done: Configured environment}"
@@ -248,10 +250,10 @@ echo ""
 #
 sleep 5
 ip_address=$(ifconfig wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-cd /home/$user_name/mess_ros && catkin_make
-echo "export ROS_MASTER_URI=http://192.168.0.229:11311" >> /home/$user_name/.bashrc
-echo "export ROS_HOSTNAME=${ip_address}" >> /home/$user_name/.bashrc
-source /home/$user_name/.bashrc
+cd ~/mess_ros && catkin_make
+echo "export ROS_MASTER_URI=http://192.168.0.229:11311" >> ~/.bashrc
+echo "export ROS_HOSTNAME=${ip_address}" >> ~/.bashrc
+source ~/.bashrc
 #
 echo ""
 echo ">>> {Done: Finalized environment configuration}"
