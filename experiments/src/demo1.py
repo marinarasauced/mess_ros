@@ -17,7 +17,8 @@ from mess_modules.nodes import Node
 def main():
 
     # Initialize node:
-    rospy.init_node("demo1")
+    experiment = os.path.splitext(os.path.basename(__file__))[0]
+    rospy.init_node(experiment)
 
     # Clear cache:
     subprocess.run("cd ~/mess_ros/src/mess_ros/experiments/src/ && rm -r cache/ && mkdir cache/")

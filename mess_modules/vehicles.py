@@ -6,6 +6,13 @@ def get_path2cache():
     path2cache = os.path.abspath(os.path.join(os.path.dirname(__file__), "../experiments/cache/"))
     return path2cache
 
+def get_path2write(name):
+    path2cache = get_path2cache()
+    path2write = os.path.abspath(os.path.join(path2cache, f"{name}/"))
+    if not os.path.exists(path2write):
+        os.mkdir(path2write)
+    return path2write
+
 class UGV():
     def __init__(self, name, ip, password):
         self.name = name
@@ -14,14 +21,11 @@ class UGV():
         
         self.nodes = []
         self.path2cache = get_path2cache()
-        self.path2write = get_path2write()
+        self.path2write = get_path2write(self.name)
 
     #
     def add_node(self, node):
         self.nodes.append(node.node)
-
-
-
 
     #
     def generate_launch_description(self):
@@ -92,4 +96,9 @@ class UGV():
         content += content2
 
         self.launch_description = content
+        self.write_launch_description()
+
+    #
+    def write_launch_description(self):
+        
 
