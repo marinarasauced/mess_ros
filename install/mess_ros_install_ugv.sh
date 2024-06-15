@@ -254,20 +254,18 @@ echo ""
 echo "#######################################################################################################################"
 echo ">>> {Step 6: Finalizing ROS Configuration}"
 echo ""
-echo ">>> {Task: Finalizing environment configuration}"
+echo ">>> {Task: Downloading finalize_mess_ros_install.sh}"
 echo ""
 #
-ip_address=$(ifconfig wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-cd /home/$user_name/mess_ros && catkin_make
-echo "export ROS_MASTER_URI=http://192.168.0.229:11311" >> /home/$user_name/.bashrc
-echo "export ROS_HOSTNAME=${ip_address}" >> /home/$user_name/.bashrc
-source /home/$user_name/.bashrc
+cd
+wget -c https://raw.githubusercontent.com/marinarasauced/mess_ros/ros1-noetic/install/finalize_mess_ros_install.sh
+chmod +x finalize_mess_ros_install.sh
 #
 echo ""
-echo ">>> {Done: Finalized environment configuration}"
+echo ">>> {Done: Downloaded finalize_mess_ros_install.sh}"
+echo ""
+echo ">>> {User: Reboot needed to finalize network configuration}"
+echo ">>> {User: After reboot, in a terminal, execute ./finalize_mess_ros_install.sh}"
 echo ""
 echo "#######################################################################################################################"
-echo ""
-echo ">>> {Ended MESS-ROS Configuration}"
-echo ""
-echo "#######################################################################################################################"
+
