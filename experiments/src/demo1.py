@@ -13,9 +13,14 @@ from mess_modules.experiments import *
 from mess_modules.vehicles import *
 from mess_modules.nodes import *
 
+def start_experiment():
+    pass
 
-
-
+def end_experiment(ugvs, uavs):
+    # shutdown_ugvs(ugvs)  # shutdown ros nodes, vehicle remains online for log download
+    # shutdown_uavs(uavs)  # shutdown ros nodes, vehicle remains online for log download
+    # write_logs(ugvs + uavs):
+    download_logs(ugvs + uavs)  # downloads log data from experiment to ~/mess_ros/logs/
 
 ##################################################################################
 
@@ -41,11 +46,13 @@ def main():
     # Create list of vehicles:
     ugvs = [burger2]
     uavs = []
-    vehicles = [ugvs, uavs]
 
     launch_vehicles(ugvs, uavs)
+    # launch_occupancy_field(ugvs) -> if num of ugs > 1, start occupancy grid that estimates bounding box collisions in threat plane using current vehicle trajectory (linear case?)
     # run experiment ... -> need to implement likely via publishers and subscibers -> flagging system (at least for ugv)
-    download_logs(vehicles)
+    start_experiment()  # 
+    end_experiment(ugvs, uavs)    # write logs on vehicles, shut down vehicles, download logs to groundstation 
+    
 
     #
     rospy.spin()

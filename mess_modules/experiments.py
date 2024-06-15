@@ -44,11 +44,19 @@ def load_ugv(name, experiment):
     return ugv
 
 def launch_vehicles(ugvs, uavs):
+    print("\n >>> [Task:   launching all vehicles]")
     for ugv in ugvs:
+        print(f" >>> [Doing:  launching {ugv.name}]")
         upload_cache(ugv)
         launch_ugv(ugv)
+        print(f" >>> [Status: launched {ugv.name}]")
     for uav in uavs:
+        print(f" >>> [Doing:  launching {uav.name}]")
+        upload_cache(uav)
+        # launch_ugv(ugv)
+        print(f" >>> [Status: launched {uav.name}]")
         pass
+    print(" >>> [Done:   launched all vehicles]")
 
 def upload_cache(vehicle):
     local_path = get_path2experiments()
