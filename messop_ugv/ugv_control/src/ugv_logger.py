@@ -2,7 +2,7 @@
 
 import rospy
 from geometry_msgs.msg import TransformStamped, Twist
-from mess_msgs.msg import CalibrateUGV, StateUGV
+from mess_msgs.msg import StateUGV
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import Imu, JointState
 import numpy as np
