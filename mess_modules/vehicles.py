@@ -1,3 +1,7 @@
+
+import rospy
+from std_msgs.msg import Bool
+
 from paramiko import SSHClient, AutoAddPolicy
 from scp import SCPClient
 import os.path
@@ -53,9 +57,20 @@ class UGV():
         self.path2cache = get_path2cache()
         self.path2write = get_path2write(self.name)
 
+        self.status = False
+        self.add_subscriber(f"/{self.name}/messop/flag", Bool)
+
     #
     def add_node(self, node):
         self.nodes.append(node.node)
+
+    def add_subscriber(self, topic, msgtype):
+        rospy.Subscriber(topic, msgtype, self.callback_flag)
+
+    #
+    def callback_flag(self, msg):
+        if msg.data == True:
+            self.status = True
 
     #
     def generate_launch_description(self):

@@ -35,8 +35,8 @@ class UGV():
 
         # ROS topics:
         self.topic_control_input = "/" + self.name + "/cmd_vel"
-        self.topic_messop_flag = "/" + self.name + "/messop/messop/flag"
-        self.topic_messop_vertex = "/" + self.name + "/messop/messop/vertex"
+        self.topic_messop_flag = "/" + self.name + "/messop/flag"
+        self.topic_messop_vertex = "/" + self.name + "/messop/vertex"
         self.topic_vicon = "/vicon/" + self.name + "/" + self.name
 
         # ROS publishers:
@@ -152,7 +152,7 @@ class UGV():
     def transitionUGV(self):
         flag2MESS = Bool()
         flag2MESS.data = True
-        self.flag_.publish
+        self.flag_.publish(flag2MESS)
         while not rospy.is_shutdown():
             rospy.loginfo("Waiting for new vertex ...")
 
