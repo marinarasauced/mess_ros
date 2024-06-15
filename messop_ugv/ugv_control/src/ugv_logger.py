@@ -219,22 +219,10 @@ if __name__=="__main__":
         data = np.array([imut, imuQx, imuQy]).T
         rospy.on_shutdown(lambda: log_data(name, head, data))
 
-        # Log odometry calibrated:
-        name = "odometry_calibrated" + today
-        head = ["time (s)", "x (m)", "y (m)", "psi (rad)"]
-        data = np.array([oct, ocTx, ocTy, ocRz]).T
-        rospy.on_shutdown(lambda: log_data(name, head, data))
-
         # Log odometry raw:
         name = "odometry_raw" + today
         head = ["time (s)", "x (m)", "y (m)", "z (m)", "q_x", "q_y", "q_z", "q_w"]
         data = np.array([ort, orTx, orTy, orTz, orQx, orQy, orQz, orQw]).T
-        rospy.on_shutdown(lambda: log_data(name, head, data))
-
-        # Log onboard state:
-        name = "state_onboard" + today
-        head = ["time (s)", "x (m)", "y (m)", "psi (rad)"]
-        data = np.array([sot, soTx, soTy, soRz]).T
         rospy.on_shutdown(lambda: log_data(name, head, data))
 
         # Log VICON calibrated:
