@@ -69,6 +69,17 @@ echo ""
 echo "#######################################################################################################################"
 echo ">>> {Step 1: ROS Noetic Installation}"
 echo ""
+echo ">>> {Task: Setting up ubuntu repositories}"
+echo ""
+#
+sudo add-apt-repository universe
+sudo add-apt-repository restricted
+sudo add-apt-repository multiverse
+sudo apt update
+#
+echo ""
+echo ">>> {Done: Set up ubuntu repositories}"
+echo ""
 echo ">>> {Task: Setting up sources.list}"
 echo ""
 #
@@ -90,7 +101,7 @@ echo ">>> {Task: Installing ROS Noetic base}"
 echo ""
 #
 sudo apt update
-sudo apt install -y ros-noetic-desktop
+sudo apt install -y ros-noetic-ros-base
 #
 echo ""
 echo ">>> {Done: Installed ROS Noetic base}"
@@ -132,8 +143,7 @@ cd
 mkdir mess_ros
 cd /home/$user_name/mess_ros
 mkdir src
-source /opt/ros/noetic/setup.bash
-catkin_make
+source /opt/ros/noetic/setup.bash && catkin_make
 echo "source /home/$user_name/mess_ros/devel/setup.bash" >> /home/$user_name/.bashrc
 source /home/$user_name/.bashrc
 #
@@ -247,7 +257,6 @@ echo ""
 echo ">>> {Task: Finalizing environment configuration}"
 echo ""
 #
-
 ip_address=$(ifconfig wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
 cd /home/$user_name/mess_ros && catkin_make
 echo "export ROS_MASTER_URI=http://192.168.0.229:11311" >> /home/$user_name/.bashrc
