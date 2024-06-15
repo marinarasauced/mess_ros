@@ -2,7 +2,7 @@
 
 ##################################################################################
 # SINGLE UGV DEMO EXPERIMENT
-#   Goal:  drive in a triangle formation for one minute
+#   Goal:  single ugv drives in a triangle formation for one minute
 #   Steps:
 #      01. clear cache    -> used to store generated vehicle configuration files to 
 #                             run experiments before pushing them to vehicles
