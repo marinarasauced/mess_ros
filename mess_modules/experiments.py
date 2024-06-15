@@ -53,7 +53,7 @@ def launch_vehicles(ugvs, uavs):
     for uav in uavs:
         print(f" >>> [Doing:  launching {uav.name}]")
         upload_cache(uav)
-        # launch_ugv(ugv)
+        # launch_uav(uav)
         print(f" >>> [Status: launched {uav.name}]")
         pass
     print(" >>> [Done:   launched all vehicles]")
