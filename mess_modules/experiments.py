@@ -21,6 +21,7 @@ def get_path2experiments():
 
 def get_path2logs():
     path2logs = os.path.abspath(os.path.join(os.path.dirname(__file__), "../logs/"))
+    return path2logs
 
 def get_path2write(name):
     path2cache = get_path2cache()
