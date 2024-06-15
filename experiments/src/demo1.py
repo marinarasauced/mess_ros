@@ -12,6 +12,9 @@
 #      04. add nodes      -> add nodes to vehicle clients
 #      05. write files    -> write launch file and optionally set config params
 #      06. start vehicles -> for each vehicle in experiment, launch ros nodes
+
+#
+#   Note:  all {experiment_name.py} files must be added to CMakeLists.txt in this directory
 ##################################################################################
 
 import rospy
