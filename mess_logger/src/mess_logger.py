@@ -31,8 +31,8 @@ class LogThisTopic():
     #
     #
     def callback(self, msg):
-        self.msgtype
-        msg
+        pass
+        #
 
 
 # Clear log files from ~/mess_ros/logs/ on agent.
