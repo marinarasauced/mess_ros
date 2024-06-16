@@ -37,9 +37,10 @@ import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
-from mess_modules.agents import launch_agents, upload_config, check4agent_nodes
+from mess_modules.agents import launch_agents, upload_config, check4agent_nodes, download_logs
 from mess_modules.cache import clear_cache, upload_cache
 from mess_modules.chatlogs import *
+from mess_modules.experiments import download_logs
 from mess_modules.node import _Node
 from mess_modules.vicon import check4viconbridge
 from mess_modules.ugv_primary import UGVPrimary
@@ -173,7 +174,8 @@ def main():
 ################################################################################
 
     # 13. download logs:
-
+    if not download_logs(agents):
+        pass
 
     # XX. shutdown rospy
     rospy.signal_shutdown("experiment completed")
