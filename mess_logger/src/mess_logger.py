@@ -11,22 +11,28 @@ import rospy
 
 import os.path
 import shutil
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../../../)) # check if this is correct, path to add is /home/user/
+
+# add import to path, must be outside ~/mess_ros/src/mess_ros/...
+# import 
 
 class LogThisTopic():
     def __init__(self, topic, msgtype):
         self.topic = topic      # "/some/topic"
         self.msgtype = msgtype  # "Imu"
-
-        rospy.on_shutdown(self.write_logs()) # easier to put this here than outside of loop since itll write for all objects
+        self.file_name = "whatever.csv"
 
         # need to define a way to get a subclass for the msgtype, probs should put subclasses in mess_modules.messages
+        rospy.Subscriber(self.topic, self.msgtype, self.callback)
 
-
     #
     #
     #
-    def write_logs(self):
-        pass
+    def callback(self, msg):
+        self.msgtype
+        msg
 
 
 # Clear log files from ~/mess_ros/logs/ on agent.
@@ -50,6 +56,12 @@ def main():
     clear_logs(path2logs)
 
     # Initialize subscribers (loggers):
+    topics = [
+        ["/topic1", "Imu"],
+        ["/topic2", "Imu"]
+    ]
+
+    log1 = LogThisTopic("/test", "Imu")
 
 
 
