@@ -189,7 +189,7 @@ int main(int argc, char **argv)
 
   // Construct node handles
   ros::NodeHandle nh;
-  ros::NodeHandle nh_ns("/" + ugv_name);
+  ros::NodeHandle nh_ns("~/" + ugv_name);
 
   // Publishers
   tb3_diagnostics_pub = nh_ns.advertise<diagnostic_msgs::DiagnosticArray>("diagnostics", 10);

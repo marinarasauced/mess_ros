@@ -19,7 +19,6 @@ include_directories(
 )
 
 catkin_install_python(PROGRAMS
-  src/ugv_control.py
-  src/ugv_calibration.py
+  src/mess_logger.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
