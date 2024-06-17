@@ -121,31 +121,35 @@ def launch_agents(ugvs, uavs):
 
     Arguments
     ---------
-    agents : list of UGVPrimary and UAVPrimary instances.
-        The agents that are part of the experiment.
+    ugvs : list of UGVPrimary instances.
+        The UGVs that are part of the experiment.
+    uavs : list of UAVPrimary instances.
+        The UAVs that are part of the experiment.
     
     Returns
     -------
     int
         1 if agents are launched, 0 else
     """
-
     print_task_start("launching ugvs")
     for ugv in ugvs:
         try:
-            commands = []
-            commands.extend([f"source /opt/ros/noetic/setup.bash && cd ~/mess_ros && catkin_make"])
-            commands.extend([f"source /opt/ros/noetic/setup.bash && source ~/mess_ros/devel/setup.bash && export ROS_MASTER_URI=http://192.168.0.229:11311 && export ROS_HOSTNAME={ugv.ip} && export TURTLEBOT3_MODEL={ugv.tb3_model} && export LDS_MODEL={ugv.lds_model} && roslaunch experiments {ugv.launch}"])
+            commands = [
+                "source /opt/ros/noetic/setup.bash && cd ~/mess_ros && catkin_make",
+                f"source /opt/ros/noetic/setup.bash && source ~/mess_ros/devel/setup.bash && export ROS_MASTER_URI=http://192.168.0.229:11311 && export ROS_HOSTNAME={ugv.ip} && export TURTLEBOT3_MODEL={ugv.tb3_model} && export LDS_MODEL={ugv.lds_model} && nohup roslaunch experiments {ugv.launch} > /dev/null 2>&1 &"
+            ]
             launcher = ROSLaunch(ugv, commands)
-            launcher.ssh.close()
-        except:
-            print_task_error(f"unable to launch {ugv.name}")
+            launcher.close()
+        except Exception as e:
+            print_task_error(f"unable to launch {ugv.name}: {str(e)}")
             return 0
     print_task_done("launched ugvs")
 
-    # print_task_doing("launching uavs")
-    for uav in uavs:
-        return 1
+    #print_task_start("launching uavs")
+    #for uav in uavs:
+    #    pass
+    #print_task_done("launched uavs")
+
     return 1
 
 def wait_for_agent_nodes(agents, timeout=30):
