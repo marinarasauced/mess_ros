@@ -28,6 +28,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <jsoncpp/json/json.h>
 
 #define SOFTWARE_VERSION "1.2.5"
 #define HARDWARE_VERSION "2020.03.16"
@@ -194,14 +195,25 @@ void msgPub()
   tb3_diagnostics_pub.publish(tb3_diagnostics);
 }
 
+std::string readFromJson(const std::string& file_path) {
+    std::ifstream file(file_path);
+    if (!file.is_open()) {
+        ROS_ERROR_STREAM("Failed to open JSON file: " << file_path);
+        return "";
+    }
+
+    Json::Value root;
+    file >> root;
+    file.close();
+
+    std::string ugv_name = root.get("name", "ns").asString();
+    return ugv_name;
+}
+
 int main(int argc, char **argv)
 {
-  std::string ugv_name;
-  if (!ros::param::get("/ugv_name", ugv_name))
-  {
-    ROS_ERROR("Failed to get ugv_name parameter");
-    return 1;
-  }
+  std::string json_file_path = "/home/ubuntu/mess_ros/src/mess_ros/messop_ugv/agent.json";
+  std::string ugv_name = readFromJson(json_file_path);
 
   ros::init(argc, argv, "turtlebot3_diagnostic");
   ros::NodeHandle nh;

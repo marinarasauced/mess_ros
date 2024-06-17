@@ -46,8 +46,12 @@ def convert_quat2eul(q_1):
         Yaw of the agent.
     """
 
-    roll = np.arctan2(2 * (q_1.w * q_1.x + q_1.y * q_1.z), 1 - 2 * (q_1.x ** 2 + q_1.y ** 2))
-    pitch = -0.5 * np.pi + 2 * np.arctan2(np.sqrt(1 + 2 * (q_1.w * q_1.y - q_1.x * q_1.z)), np.sqrt(1 - 2 * (q_1.w * q_1.y - q_1.x * q_1.z)))
+    roll = roll = np.arctan2(2 * (q_1.w * q_1.x + q_1.y * q_1.z), 1 - 2 * (q_1.x ** 2 + q_1.y ** 2))
+    pitch_sign = 2 * (q_1.w * q_1.y - q_1.x * q_1.z)
+    if np.abs(pitch_sign) >= 1:
+        pitch = np.sign(pitch_sign) * 0.5 * np.pi
+    else:
+        pitch = -0.5 * np.pi + np.arcsin(pitch_sign)
     yaw = np.arctan2(2 * (q_1.w * q_1.z + q_1.x * q_1.y), 1 - 2 * (q_1.y ** 2 + q_1.z ** 2))
     return roll, pitch, yaw
 

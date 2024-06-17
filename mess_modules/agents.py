@@ -25,10 +25,7 @@ def load_json(name, file_name):
     path2agent = get_path2agent(name)
     file_path = os.path.join(path2agent, file_name)
     with open(file_path, "r") as file:
-        load = json.load(file)
-    data = {}
-    for idx, key in enumerate(load.keys()):
-        data[key] = idx
+        data = json.load(file)
     return data
 
 def load_ugvprimary(name):
@@ -154,10 +151,19 @@ def load_calibration(name):
         Difference quaternion used to callibrate VICON orientation callbacks.
     """
 
-    data = load_json(name, "calibration.json")
+    data = load_json(name, f"calibration.json")
     q_diff = Quaternion()
     q_diff.x = data["x"]
     q_diff.y = data["y"]
     q_diff.z = data["z"]
     q_diff.w = data["w"]
     return q_diff
+
+def get_ugv_agent_name():
+    """
+    """
+
+    file_path = "/home/ubuntu/mess_ros/src/mess_ros/messop_ugv/agent.json"
+    with open(file_path, "r") as file:
+        data = json.load(file)
+    return data["name"]

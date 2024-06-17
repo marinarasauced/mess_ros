@@ -11,6 +11,7 @@ import time
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
+from mess_modules.agents import get_ugv_agent_name
 from mess_modules.paths import get_path2agent
 from mess_modules.quaternions import convert_eul2quat, invert_quat, multiply_quats, average_quats
 from mess_modules.ugv_secondary import UGVSecondary
@@ -51,13 +52,13 @@ def update_sample(ts_1, ts_2, idx):
     ts_qw2 = ts_2.transform.rotation.w
 
     ts_3 = TransformStamped()
-    ts_3.transform.translation.x = (ts_tx1 * iter + ts_tx2) / (iter + 1)
-    ts_3.transform.translation.y = (ts_ty1 * iter + ts_ty2) / (iter + 1)
-    ts_3.transform.translation.z = (ts_tz1 * iter + ts_tz2) / (iter + 1)
-    ts_3.transform.rotation.x = (ts_qx1 * iter + ts_qx2) / (iter + 1)
-    ts_3.transform.rotation.y = (ts_qy1 * iter + ts_qy2) / (iter + 1)
-    ts_3.transform.rotation.z = (ts_qz1 * iter + ts_qz2) / (iter + 1)
-    ts_3.transform.rotation.w = (ts_qw1 * iter + ts_qw2) / (iter + 1)
+    ts_3.transform.translation.x = (ts_tx1 * idx + ts_tx2) / (idx + 1)
+    ts_3.transform.translation.y = (ts_ty1 * idx + ts_ty2) / (idx + 1)
+    ts_3.transform.translation.z = (ts_tz1 * idx + ts_tz2) / (idx + 1)
+    ts_3.transform.rotation.x = (ts_qx1 * idx + ts_qx2) / (idx + 1)
+    ts_3.transform.rotation.y = (ts_qy1 * idx + ts_qy2) / (idx + 1)
+    ts_3.transform.rotation.z = (ts_qz1 * idx + ts_qz2) / (idx + 1)
+    ts_3.transform.rotation.w = (ts_qw1 * idx + ts_qw2) / (idx + 1)
     return ts_3
 
 
@@ -80,6 +81,7 @@ def sample_data(ugv):
     for idx in range(ugv.calibration_samples):
         ts_meas = rospy.wait_for_message(ugv.topic_vicon, TransformStamped)
         ts_sample = update_sample(ts_sample, ts_meas, idx)
+    return ts_sample
 
 def run_calibration(ugv):
     """
@@ -103,15 +105,18 @@ def run_calibration(ugv):
         ts_pos2.transform.translation.y - ts_pos1.transform.translation.y,
         ts_pos2.transform.translation.x - ts_pos1.transform.translation.x
     )
+    q_pos1 = ts_pos1.transform.rotation
+    q_pos2 = ts_pos2.transform.rotation
+
     q_0 = convert_eul2quat(0.0, 0.0, theta)
-    q_1 = average_quats(ts_pos1, ts_pos1)
+    q_1 = average_quats(q_pos1, q_pos2)
     q_1_inv = invert_quat(q_1)
     q_diff = multiply_quats(q_1_inv, q_0)
 
     file_path = os.path.join(get_path2agent(ugv.name), f"calibration.json")
     content = {"x": q_diff.x, "y": q_diff.y, "z": q_diff.z, "w": q_diff.w}
     with open(file_path, "w") as file:
-        json.dump(content)
+        json.dump(content, file)
 
 def main():
     """
@@ -123,7 +128,7 @@ def main():
     rospy.init_node("ugv_calibration")
     rospy.sleep(12)  # wait for turtlebot3_bringup (ikr such a bad way to wait)
 
-    ugv = UGVSecondary(rospy.get_param("ugv_name"))
+    ugv = UGVSecondary(get_ugv_agent_name())
     run_calibration(ugv)
 
 if __name__=="__main__":
