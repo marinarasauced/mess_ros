@@ -14,20 +14,33 @@ from mess_modules.log2terminal import *
 from mess_modules.node import ROSNode
 from mess_modules.ugv_primary import UGVPrimary
 
+def run_experiment(burger2):
+    """
+    
+    """
+    
+    points = np.array([
+        [1.0, 2.0],
+        [2.0, 3.0],
+        [0.0, 0.0]
+    ])
+    counter = 0
+    rate = rospy.Rate(10)
+    while not rospy.is_shutdown():
+        if burger2.status:
+            msg = MESS2UGV()
+            msg.pose.x = points[counter, 0]
+            msg.pose.y = points[counter, 1]
+            msg.pose.theta = 0
+            msg.index = 2  # indicate linear translation operations
+            burger2.pub_vertex.publish(msg)
+            burger2.status = False
 
+        if counter > 2:
+            counter = 0
 
-
-
-
-
-
-
-
-
-
-
-
-
+        rate.sleep()
+        rospy.spin()
 
 def main(experiment):
     """
@@ -62,11 +75,10 @@ def main(experiment):
 
         if not run_experiment_setup(ugvs, uavs):
             return
+        else:
+            run_experiment(burger2)
 
-        
-        
-
-
+        # download_logs(agents)
 
     except Exception as e:
         print_task_error(f"{e}")

@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="mess_logger", type="mess_logger.py" name="logger" output="screen"/>
+</launch>
