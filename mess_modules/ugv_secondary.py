@@ -124,13 +124,12 @@ class UGVSecondary():
         When this function is called, control input proportional to the rotational error are published until the agent's orientation is within tolerance.
         """
 
-        rate = rospy.Rate(10)
         self.e_reset()
         while abs(self.e_local_curr.pose.theta) > self.error_tol_rz:
             self.e_update1()
             u_ang = -self.max_ang_vel * self.e_local_curr.pose.theta
-            self.pub_control.publish(u_lin=0.0, u_ang=u_ang)
-            rate.sleep()
+            self.controlUGV(u_lin=0.0, u_ang=u_ang)
+            print(f"{self.e_local_curr.pose.theta}")
 
     def translateUGV(self):
         """
@@ -139,13 +138,11 @@ class UGVSecondary():
         When this function is called, control input proportional to the local y-pos and z-rot error are published to the agent so that it follows the vector from the starting position to the target position.
         """
 
-        rate = rospy.Rate(10)
         self.e_reset()
         while abs(self.e_local_curr.pose.x) > self.error_tol_tx or abs(self.e_local_curr.pose.y) > self.error_tol_ty:
             self.e_update2()
             u_ang = -self.k_ty * self.e_local_curr.pose.y -self.k_rz * self.e_local_curr.pose.theta
-            self.pub_control.publish(u_lin=self.max_lin_vel, u_ang=u_ang)
-            rate.sleep()
+            self.controlUGV(u_lin=self.max_lin_vel, u_ang=u_ang)
 
     def transitionUGV(self):
         """
@@ -188,9 +185,9 @@ class UGVSecondary():
                 pass
 
             self.controlUGV(u_lin=0.0, u_ang=0.0)
-            self.x_vertex_init.pose.x = vertex.pose.x
-            self.x_vertex_init.pose.y = vertex.pose.y
-            self.x_vertex_init.pose.theta = vertex.pose.theta
+            self.x_vertex_init.pose.x = self.x_vertex_init.pose.x
+            self.x_vertex_init.pose.y = self.x_vertex_init.pose.y
+            self.x_vertex_init.pose.theta = self.x_vertex_init.pose.theta
 
             status.data = True
             self.pub_status.publish(status)
@@ -212,7 +209,7 @@ class UGVSecondary():
 
         self.e_local_curr.pose.x = self.x_vertex_trgt.pose.x - self.x_global_curr.pose.x
         self.e_local_curr.pose.y = self.x_vertex_trgt.pose.y - self.x_global_curr.pose.y
-        self.e_local_curr.pose.theta = self.wrap2pi(self.x_vertex_trgt.pose.theta - self.x_global_curr.pose.theta)
+        self.e_local_curr.pose.theta = self.wrap2pi(-self.x_vertex_trgt.pose.theta + self.x_global_curr.pose.theta)
 
     def e_update2(self):
         """
@@ -231,7 +228,7 @@ class UGVSecondary():
 
         self.e_local_curr.pose.x = b * np.cos(theta)
         self.e_local_curr.pose.y = b * np.sin(theta) * np.sign(alpha - psi)
-        self.e_local_curr.pose.theta = self.wrap_heading(self.x_global_curr.pose.theta - psi)
+        self.e_local_curr.pose.theta = self.wrap2pi(self.x_global_curr.pose.theta - psi)
 
     def wrap2pi(self, theta):
         """
