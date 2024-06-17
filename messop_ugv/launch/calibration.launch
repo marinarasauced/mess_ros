@@ -1,0 +1,5 @@
+<launch>
+    <arg name="ugv_name" default="burger2"/>
+    <param name="ugv_name" value="$(arg ugv_name)"/>
+    <node pkg="messop_ugv" type="ugv_calibration.py" name="calibration"/>
+</launch>
