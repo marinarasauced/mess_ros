@@ -1,6 +1,0 @@
-
-ugv_primary.py:
-    - add logger node to launch content string
-
-_agents.py
-    - write get_primary_uav_agent()
