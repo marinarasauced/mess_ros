@@ -30,11 +30,9 @@ def upload(agent, local_path, remote_path):
         port=-1
     )
     scp = SCPClient(ssh.get_transport())
-    scp.put(local_path=local_path, remote_path=remote_path, recursive=True)
+    scp.put(local_path, recursive=True, remote_path=remote_path)
     scp.close()
     ssh.close()
-
-
 
 def download(agent, local_path, remote_path):
     """
@@ -62,7 +60,7 @@ def download(agent, local_path, remote_path):
         port=-1
     )
     scp = SCPClient(ssh.get_transport())
-    scp.get(local_path=local_path, remote_path=remote_path, recursive=True)
+    scp.get(remote_path=remote_path, local_path=local_path, recursive=True)
     scp.close()
     ssh.close()
 

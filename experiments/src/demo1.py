@@ -11,7 +11,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"
 
 from mess_modules.experiments import run_experiment_setup
 from mess_modules.log2terminal import *
-from mess_modules.node import ROSNode
+from mess_modules.rosnode import ROSNode
 from mess_modules.ugv_primary import UGVPrimary
 
 def run_experiment(burger2):
@@ -75,8 +75,7 @@ def main(experiment):
 
         if not run_experiment_setup(ugvs, uavs):
             return
-        else:
-            run_experiment(burger2)
+        run_experiment(burger2)
 
         # download_logs(agents)
 
