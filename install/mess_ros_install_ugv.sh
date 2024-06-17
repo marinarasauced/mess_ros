@@ -163,6 +163,8 @@ cd /home/$user_name/mess_ros/src
 git clone https://github.com/ROBOTIS-GIT/turtlebot3.git
 git clone https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git
 git clone -b develop https://github.com/ROBOTIS-GIT/ld08_driver.git
+sudo apt install -y ros-noetic-rosserial-python
+sudo apt install -y ros-noetic-tf
 cd /home/$user_name/mess_ros/src/turtlebot3
 git pull
 rm -r turtlebot3_description/ turtlebot3_teleop/ turtlebot3_navigation/ turtlebot3_slam/ turtlebot3_example/
