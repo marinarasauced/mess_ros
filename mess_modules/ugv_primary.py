@@ -121,7 +121,6 @@ class UGVPrimary():
         <launch>
 
             <arg name="ugv_name" default="{self.name}"/>
-            <param name="ugv_name" value="$(arg ugv_name)"/>
 
             <arg name="multi_robot_name" default=""/>
             <arg name="set_lidar_frame_id" default="base_scan"/>
