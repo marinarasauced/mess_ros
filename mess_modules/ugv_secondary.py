@@ -7,6 +7,7 @@ from std_msgs.msg import Bool, Int16
 import numpy as np
 
 from mess_modules.agents import load_ugvsecondary, load_calibration
+from mess_modules.log2terminal import print_task_agent
 from mess_modules.quaternions import multiply_quats, convert_quat2eul
 
 
@@ -125,11 +126,11 @@ class UGVSecondary():
         """
 
         self.e_reset()
+        print_task_agent(f"rotating to {self.x_vertex_trgt.pose.theta}", self.name)
         while abs(self.e_local_curr.pose.theta) > self.error_tol_rz:
             self.e_update1()
             u_ang = -self.max_ang_vel * self.e_local_curr.pose.theta
             self.controlUGV(u_lin=0.0, u_ang=u_ang)
-            print(f"{self.e_local_curr.pose.theta}")
 
     def translateUGV(self):
         """
@@ -139,6 +140,7 @@ class UGVSecondary():
         """
 
         self.e_reset()
+        print_task_agent(f"translating to ({self.x_vertex_trgt.pose.x}, {self.x_vertex_trgt.pose.y})", self.name)
         while abs(self.e_local_curr.pose.x) > self.error_tol_tx or abs(self.e_local_curr.pose.y) > self.error_tol_ty:
             self.e_update2()
             u_ang = -self.k_ty * self.e_local_curr.pose.y -self.k_rz * self.e_local_curr.pose.theta
@@ -147,11 +149,21 @@ class UGVSecondary():
     def transitionUGV(self):
         """
         """
+
         status = Bool()
         status.data = True
         self.pub_status.publish(status)
         status.data = False
+
+        rospy.wait_for_message(self.topic_vicon, TransformStamped)
+        self.x_vertex_init.pose.x = self.x_global_curr.pose.x
+        self.x_vertex_init.pose.y = self.x_global_curr.pose.y
+        self.x_vertex_init.pose.theta = self.x_global_curr.pose.theta
+        self.x_vertex_trgt.pose.x = self.x_vertex_init.pose.x
+        self.x_vertex_trgt.pose.y = self.x_vertex_init.pose.y
+        self.x_vertex_trgt.pose.theta = self.x_vertex_init.pose.theta
         while not rospy.is_shutdown():
+            print_task_agent("waiting for vertex", self.name)
             while self.x_vertex_init.pose.x == self.x_vertex_trgt.pose.x and self.x_vertex_init.pose.y == self.x_vertex_trgt.pose.y and self.x_vertex_init.pose.theta == self.x_vertex_trgt.pose.theta:
                 vertex = rospy.wait_for_message(self.topic_from_primary, MESS2UGV)
                 self.x_vertex_trgt.pose.x = vertex.pose.x
@@ -164,7 +176,7 @@ class UGVSecondary():
 
             elif operation == 2:
                 dx = self.x_vertex_trgt.pose.x - self.x_vertex_init.pose.x
-                dy = self.x_vertex_trgt.pose.x - self.x_vertex_init.pose.x
+                dy = self.x_vertex_trgt.pose.y - self.x_vertex_init.pose.y
                 theta0 = np.arctan2(dy, dx)
                 self.x_vertex_trgt.pose.theta = theta0
                 self.rotateUGV()
@@ -172,7 +184,7 @@ class UGVSecondary():
 
             elif operation == 3:
                 dx = self.x_vertex_trgt.pose.x - self.x_vertex_init.pose.x
-                dy = self.x_vertex_trgt.pose.x - self.x_vertex_init.pose.x
+                dy = self.x_vertex_trgt.pose.y - self.x_vertex_init.pose.y
                 theta0 = np.arctan2(dy, dx)
                 theta1 = self.x_vertex_trgt.pose.theta
                 self.x_vertex_trgt.pose.theta = theta0
@@ -185,9 +197,9 @@ class UGVSecondary():
                 pass
 
             self.controlUGV(u_lin=0.0, u_ang=0.0)
-            self.x_vertex_init.pose.x = self.x_vertex_init.pose.x
-            self.x_vertex_init.pose.y = self.x_vertex_init.pose.y
-            self.x_vertex_init.pose.theta = self.x_vertex_init.pose.theta
+            self.x_vertex_init.pose.x = self.x_vertex_trgt.pose.x
+            self.x_vertex_init.pose.y = self.x_vertex_trgt.pose.y
+            self.x_vertex_init.pose.theta = self.x_vertex_trgt.pose.theta
 
             status.data = True
             self.pub_status.publish(status)
@@ -209,26 +221,29 @@ class UGVSecondary():
 
         self.e_local_curr.pose.x = self.x_vertex_trgt.pose.x - self.x_global_curr.pose.x
         self.e_local_curr.pose.y = self.x_vertex_trgt.pose.y - self.x_global_curr.pose.y
-        self.e_local_curr.pose.theta = self.wrap2pi(-self.x_vertex_trgt.pose.theta + self.x_global_curr.pose.theta)
+        self.e_local_curr.pose.theta = self.wrap2pi(self.x_global_curr.pose.theta -self.x_vertex_trgt.pose.theta)
 
     def e_update2(self):
         """
         Update local error during translation.
         """
 
-        A = np.array([[self.x_vertex_trgt.pose.x - self.x_vertex_init.pose.x], [self.x_vertex_trgt.pose.y - self.x_vertex_init.pose.y]])
-        B = np.array([[self.x_vertex_trgt.pose.x - self.x_global_curr.pose.x], [self.x_vertex_trgt.pose.y - self.x_global_curr.pose.y]])
-        C = np.array([[self.x_global_curr.pose.x - self.x_vertex_init.pose.x], [self.x_global_curr.pose.y - self.x_vertex_init.pose.y]])
-        a = np.sqrt(A[0, 0] ** 2 + A[1, 0] ** 2)
-        b = np.sqrt(B[0, 0] ** 2 + B[1, 0] ** 2)
+        try:
+            A = np.array([[self.x_vertex_trgt.pose.x - self.x_vertex_init.pose.x], [self.x_vertex_trgt.pose.y - self.x_vertex_init.pose.y]])
+            B = np.array([[self.x_vertex_trgt.pose.x - self.x_global_curr.pose.x], [self.x_vertex_trgt.pose.y - self.x_global_curr.pose.y]])
+            C = np.array([[self.x_global_curr.pose.x - self.x_vertex_init.pose.x], [self.x_global_curr.pose.y - self.x_vertex_init.pose.y]])
+            a = np.sqrt(A[0, 0] ** 2 + A[1, 0] ** 2)
+            b = np.sqrt(B[0, 0] ** 2 + B[1, 0] ** 2)
 
-        theta = np.arccos(sum(np.multiply(A, B)) / (a * b))
-        alpha = np.arctan2(C[1, 0], C[0, 0])
-        psi = np.arctan2(A[1, 0], A[0, 0])
+            theta = np.arccos(sum(np.multiply(A, B)) / (a * b))
+            alpha = np.arctan2(C[1, 0], C[0, 0])
+            psi = np.arctan2(A[1, 0], A[0, 0])
 
-        self.e_local_curr.pose.x = b * np.cos(theta)
-        self.e_local_curr.pose.y = b * np.sin(theta) * np.sign(alpha - psi)
-        self.e_local_curr.pose.theta = self.wrap2pi(self.x_global_curr.pose.theta - psi)
+            self.e_local_curr.pose.x = b * np.cos(theta)
+            self.e_local_curr.pose.y = b * np.sin(theta) * np.sign(alpha - psi)
+            self.e_local_curr.pose.theta = self.wrap2pi(self.x_global_curr.pose.theta - psi)
+        except:
+            print("error")
 
     def wrap2pi(self, theta):
         """
