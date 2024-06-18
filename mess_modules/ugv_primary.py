@@ -1,7 +1,7 @@
 
 import rospy
 from mess_msgs.msg import MESS2UGV
-from std_msgs.msg import Bool
+from std_msgs.msg import *
 
 import os.path
 import textwrap
