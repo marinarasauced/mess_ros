@@ -2,6 +2,7 @@
 import rospy
 import rosnode
 
+import subprocess
 import time
 
 from mess_modules.log2terminal import *
@@ -43,6 +44,8 @@ def run_experiment_setup(ugvs, uavs):
     
     if not wait_for_agent_nodes(agents, timeout=30):
         return 0
+    
+    return 1
 
 def check_vicon_node(agents):
     """
@@ -136,7 +139,7 @@ def launch_agents(ugvs, uavs):
         try:
             commands = [
                 "source /opt/ros/noetic/setup.bash && cd ~/mess_ros && catkin_make",
-                f"source /opt/ros/noetic/setup.bash && source ~/mess_ros/devel/setup.bash && export ROS_MASTER_URI=http://192.168.0.229:11311 && export ROS_HOSTNAME={ugv.ip} && export TURTLEBOT3_MODEL={ugv.tb3_model} && export LDS_MODEL={ugv.lds_model} && nohup roslaunch experiments {ugv.launch} > /dev/null 2>&1 &"
+                f"source /opt/ros/noetic/setup.bash && source ~/mess_ros/devel/setup.bash && export ROS_MASTER_URI=http://192.168.0.229:11311 && export ROS_HOSTNAME={ugv.ip} && export TURTLEBOT3_MODEL={ugv.tb3_model} && export LDS_MODEL={ugv.lds_model} && roslaunch experiments {ugv.launch}"
             ]
             launcher = ROSLaunch(ugv, commands)
             launcher.close()
@@ -167,22 +170,22 @@ def wait_for_agent_nodes(agents, timeout=30):
         1 if all agents nodes are running, 0 else
     """
 
-    print_task_start("waiting for all agent nodes to start")
+    print_task_start("checking if all agent nodes are launched")
     rate = rospy.Rate(1)
     nodes = []
     for agent in agents:
         for node in agent.node_names:
             nodes.append(f"/{node}")
-    print(nodes)
 
     tic = time.time()
     toc = tic + timeout
     while time.time() < toc:
-        print_task_doing("checking if all agent nodes are running")
+        print_task_doing("waiting for all agent nodes to fully launch")
         running = rosnode.get_node_names()
         status = [1 if node in running else 0 for node in nodes]
         if all(status):
-            break
+            print_task_done("all agent nodes are running")
+            return 1
         rate.sleep()
     if not all(status):
         print_task_error("not all agent nodes are running")
@@ -191,6 +194,20 @@ def wait_for_agent_nodes(agents, timeout=30):
         print_task_done("all agent nodes are running")
         return 1
 
+def shutdown_ros_except_vicon(experiment):
+    """
+    Shutdown all ROS nodes except /vicon (master) at the end of an experiment.
+    """
 
-
-
+    print_task_start("shutting down all ros node except /vicon")
+    vicon = "/vicon"
+    rosout = "/rosout"
+    experiment = f"/{experiment}"
+    exceptions = [vicon, rosout, experiment]
+    nodes = rosnode.get_node_names() 
+    for node in nodes:
+        if node not in exceptions:
+            print_task_doing(f"shutting down {node}")
+            killcmd = ["rosnode", "kill", node]
+            subprocess.run(killcmd, stdout=subprocess.DEVNULL)
+    print_task_done("shut down all ros nodes except /vicon")

@@ -9,7 +9,7 @@ import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
-from mess_modules.experiments import run_experiment_setup
+from mess_modules.experiments import run_experiment_setup, shutdown_ros_except_vicon
 from mess_modules.log2terminal import *
 from mess_modules.rosnode import ROSNode
 from mess_modules.ugv_primary import UGVPrimary
@@ -21,13 +21,14 @@ def run_experiment(burger2):
     
     points = np.array([
         [1.0, 2.0],
-        [2.0, 3.0],
+        [1.0, 0.0],
         [0.0, 0.0]
     ])
     counter = 0
-    rate = rospy.Rate(10)
+    rate = rospy.Rate(20)
     while not rospy.is_shutdown():
         if burger2.status:
+            print(f"new task: ({points[counter, 0]}, {points[counter, 1]})")
             msg = MESS2UGV()
             msg.pose.x = points[counter, 0]
             msg.pose.y = points[counter, 1]
@@ -35,12 +36,12 @@ def run_experiment(burger2):
             msg.index = 2  # indicate linear translation operations
             burger2.pub_vertex.publish(msg)
             burger2.status = False
+            counter += 1
 
         if counter > 2:
             counter = 0
 
         rate.sleep()
-        rospy.spin()
 
 def main(experiment):
     """
@@ -60,8 +61,8 @@ def main(experiment):
         # XX. OPTIONALLY CHANGE CONFIG FILES
         burger2.write_config_file(
             calibration_samples=1000,
-            max_lin_vel_ratio=0.5, max_ang_vel_ratio=0.3,
-            error_tol_tx=0.02, error_tol_ty=0.04, error_tol_rz=0.01,
+            max_lin_vel_ratio=0.8, max_ang_vel_ratio=0.4,
+            error_tol_tx=0.02, error_tol_ty=0.04, error_tol_rz=0.015,
             occlusion_tol=0.1, 
             k_ty=4.6, k_rz=2.7
         )
@@ -70,13 +71,12 @@ def main(experiment):
         ugvs = [burger2]
         uavs = []
 
-######### DO NOT MODIFY BELOW THIS LINE UNLESS YOU ARE CERTAIN
-################################################################
-
         if not run_experiment_setup(ugvs, uavs):
-            return
+            return 0
+
         run_experiment(burger2)
 
+        shutdown_ros_except_vicon(experiment)
         # download_logs(agents)
 
     except Exception as e:

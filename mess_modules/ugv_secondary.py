@@ -42,7 +42,7 @@ class UGVSecondary():
 
         # ROS publishers and subscribers:
         self.pub_control = rospy.Publisher(self.topic_control, Twist, queue_size=10)
-        self.pub_status = rospy.Publisher(self.topic_to_primary, Bool, queue_size=10)
+        self.pub_status = rospy.Publisher(self.topic_to_primary, Bool, queue_size=10, latch=True)
         self.pub_vicon_calibrated = rospy.Publisher(self.topic_vicon_calibrated, TransformStamped, queue_size=10)
         #rospy.Subscriber(self.topic_from_primary, MESS2UGV, self.callback_vertex)
         rospy.Subscriber(self.topic_occupancy, Int16, self.callback_occupancy)
@@ -125,12 +125,15 @@ class UGVSecondary():
         When this function is called, control input proportional to the rotational error are published until the agent's orientation is within tolerance.
         """
 
+        rate = rospy.Rate(20)
         self.e_reset()
         print_task_agent(f"rotating to {self.x_vertex_trgt.pose.theta}", self.name)
         while abs(self.e_local_curr.pose.theta) > self.error_tol_rz:
             self.e_update1()
             u_ang = -self.max_ang_vel * self.e_local_curr.pose.theta
             self.controlUGV(u_lin=0.0, u_ang=u_ang)
+            rate.sleep()
+        self.controlUGV(u_lin=0.0, u_ang=0.0)
 
     def translateUGV(self):
         """
@@ -139,12 +142,15 @@ class UGVSecondary():
         When this function is called, control input proportional to the local y-pos and z-rot error are published to the agent so that it follows the vector from the starting position to the target position.
         """
 
+        rate = rospy.Rate(20)
         self.e_reset()
         print_task_agent(f"translating to ({self.x_vertex_trgt.pose.x}, {self.x_vertex_trgt.pose.y})", self.name)
         while abs(self.e_local_curr.pose.x) > self.error_tol_tx or abs(self.e_local_curr.pose.y) > self.error_tol_ty:
             self.e_update2()
             u_ang = -self.k_ty * self.e_local_curr.pose.y -self.k_rz * self.e_local_curr.pose.theta
             self.controlUGV(u_lin=self.max_lin_vel, u_ang=u_ang)
+            rate.sleep()
+        self.controlUGV(u_lin=0.0, u_ang=0.0)
 
     def transitionUGV(self):
         """
@@ -153,7 +159,7 @@ class UGVSecondary():
         status = Bool()
         status.data = True
         self.pub_status.publish(status)
-        status.data = False
+        print("waiting for somethign to happen")
 
         rospy.wait_for_message(self.topic_vicon, TransformStamped)
         self.x_vertex_init.pose.x = self.x_global_curr.pose.x
@@ -197,13 +203,16 @@ class UGVSecondary():
                 pass
 
             self.controlUGV(u_lin=0.0, u_ang=0.0)
-            self.x_vertex_init.pose.x = self.x_vertex_trgt.pose.x
-            self.x_vertex_init.pose.y = self.x_vertex_trgt.pose.y
-            self.x_vertex_init.pose.theta = self.x_vertex_trgt.pose.theta
+            self.x_vertex_init.pose.x = self.x_global_curr.pose.x
+            self.x_vertex_init.pose.y = self.x_global_curr.pose.y
+            self.x_vertex_init.pose.theta = self.x_global_curr.pose.theta
+            self.x_vertex_trgt.pose.x = self.x_vertex_init.pose.x
+            self.x_vertex_trgt.pose.y = self.x_vertex_init.pose.y
+            self.x_vertex_trgt.pose.theta = self.x_vertex_init.pose.theta
 
+            status = Bool()
             status.data = True
             self.pub_status.publish(status)
-            status.data = False
 
     def e_reset(self):
         """

@@ -125,8 +125,8 @@ def main():
     This node will start the ugv agent's dynamics. It is currently configured for waypoint navigation so that the agent can translate linearly between two points to collect data for the calibration.
     """
 
-    rospy.init_node("ugv_calibration")
     rospy.sleep(12)  # wait for turtlebot3_bringup (ikr such a bad way to wait)
+    rospy.init_node("ugv_calibration")
 
     ugv = UGVSecondary(get_ugv_agent_name())
     run_calibration(ugv)

@@ -38,7 +38,7 @@ class UGVPrimary():
         self.topic_from_secondary = f"/{self.name}/messop/status"
 
         # ROS publishers and subscribers:
-        self.pub_vertex = rospy.Publisher(self.topic_to_secondary, MESS2UGV, queue_size=10)
+        self.pub_vertex = rospy.Publisher(self.topic_to_secondary, MESS2UGV, queue_size=10, latch=True)
         rospy.Subscriber(self.topic_from_secondary, Bool, self.callback_status)
  
     def add_node(self, node):
