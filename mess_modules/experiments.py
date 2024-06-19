@@ -8,7 +8,7 @@ import subprocess
 import time
 
 from mess_modules.log2terminal import *
-from mess_modules.paths import get_path2agents, get_path2experiments, 
+from mess_modules.paths import get_path2agents, get_path2experiments
 from mess_modules.roslaunch import ROSLaunch
 from mess_modules.scp import upload
 
