@@ -1,4 +1,3 @@
-
 echo "#######################################################################################################################"
 echo ""
 echo ">>> {Resuming MESS-ROS Configuration}"
@@ -14,10 +13,11 @@ echo ""
 #
 read -p "Enter your wlan0 inet address (it will look like 192.168.0.XX:" ip_address
 #
-cd /home/$user_name/mess_ros && catkin_make
-echo "export ROS_MASTER_URI=http://192.168.0.229:11311" >> /home/$user_name/.bashrc
-echo "export ROS_HOSTNAME=${ip_address}" >> /home/$user_name/.bashrc
-source /home/$user_name/.bashrc
+cd
+cd mess_ros/ && catkin_make
+sudo echo "export ROS_MASTER_URI=http://192.168.0.229:11311" >> ~/.bashrc
+sudo echo "export ROS_HOSTNAME=${ip_address}" >> ~/.bashrc
+source ~/.bashrc
 #
 echo ""
 echo ">>> {Done: Finalized environment configuration}"
