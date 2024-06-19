@@ -44,7 +44,6 @@ class UGVSecondary():
         self.pub_control = rospy.Publisher(self.topic_control, Twist, queue_size=10)
         self.pub_status = rospy.Publisher(self.topic_to_primary, Bool, queue_size=10, latch=True)
         self.pub_vicon_calibrated = rospy.Publisher(self.topic_vicon_calibrated, TransformStamped, queue_size=10)
-        #rospy.Subscriber(self.topic_from_primary, MESS2UGV, self.callback_vertex)
         rospy.Subscriber(self.topic_occupancy, Int16, self.callback_occupancy)
         rospy.Subscriber(self.topic_vicon, TransformStamped, self.callback_vicon)
 

@@ -92,7 +92,7 @@ def get_ugv_velocities():
 
 def load_ugvsecondary(name):
     """
-    Load a ugv agent's data from a JSON file for a UGVPrimary instance.
+    Load a ugv agent's data from a JSON file for a UGVSecondary instance.
 
     Parameters
     ----------
@@ -135,6 +135,25 @@ def load_ugvsecondary(name):
     max_lin_vel *= max_lin_vel_ratio
     max_ang_vel *= max_ang_vel_ratio
     return calibration_samples, max_lin_vel, max_ang_vel, error_tol_tx, error_tol_ty, error_tol_rz, occlusion_tol, k_ty, k_rz
+
+def load_uavsecondary(name):
+    """
+    Load a uav agent's data from a JSON file for a UAVSecondary instance.
+
+    Parameters
+    ----------
+    name : str
+        Name of the agent whose data is to be loaded.
+
+    Returns
+    -------
+    calibration_samples : int
+        The number of samples to collect at each calibration point.
+    """
+
+    data = load_json(name, f"config.json")
+    calibration_samples = data["calibration_samples"]
+    return calibration_samples
 
 def load_calibration(name):
     """
