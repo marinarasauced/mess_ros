@@ -233,7 +233,10 @@ def download_logs(agents, experiment):
     for agent in agents:
         try:
             print_task_doing(f"downloading logs from {agent.name}")
-            local_path = f"{write_path}/{agent.name}/"
+            local_path = os.path.join(os.path.expanduser(f"~/mess_ros/logs/"), f"{experiment}/{write_path}", agent.name)
+            if not os.path.exists(local_path):
+                os.makedirs(local_path)
+            print(local_path)
             remote_path = "~/mess_ros/logs/"
             download(agent=agent, local_path=local_path, remote_path=remote_path)
         except:
@@ -258,8 +261,8 @@ def get_write_path(experiment):
     """
 
     local_path = os.path.expanduser("~/mess_ros/logs")
-    date = datetime.now().strftime("%Y-m-%d")
-    time = datetime.now().strftime("%H-%M-%S")
+    date = datetime.datetime.now().strftime("%Y-%m-%d")
+    time = datetime.datetime.now().strftime("%H-%M-%S")
     trial = get_this_trial(local_path, experiment)
     directory = f"{trial}--{date}--{time}"
     return directory
