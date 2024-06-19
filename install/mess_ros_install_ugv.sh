@@ -8,9 +8,6 @@ echo "##########################################################################
 echo ""
 echo ">>> {Starting MESS-ROS Configuration}"
 echo ""
-
-#
-echo ""
 echo ">>> {User: Enter desired name for agent}"
 echo ""
 #
