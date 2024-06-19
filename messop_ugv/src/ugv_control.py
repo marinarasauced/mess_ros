@@ -7,7 +7,7 @@ import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
-from mess_modules.agents import get_ugv_agent_name
+from mess_modules.agents import get_agent_name
 from mess_modules.ugv_secondary import UGVSecondary
 
 
@@ -21,7 +21,7 @@ def main():
     rospy.sleep(12)  # wait for turtlebot3_bringup (ikr such a bad way to wait)
     rospy.init_node("ugv_control")
 
-    ugv = UGVSecondary(get_ugv_agent_name())
+    ugv = UGVSecondary(get_agent_name())
     print("ready")  # do not remove
     ugv.transitionUGV()
 
