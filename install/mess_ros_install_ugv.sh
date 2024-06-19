@@ -226,13 +226,13 @@ cp /home/$user_name/mess_ros/src/mess_ros/messop_ugv/move2turtlebot3_bringup/tur
 echo ""
 echo ">>> {Done: Updated turtlebot3_bringup files}"
 echo ""
-echo ">>> {Task: Writing agent.json to ~/mess_ros/src/mess_ros/}"
+echo ">>> {Task: Writing agent.json to ~/mess_ros/}"
 echo ""
 #
-echo "{\"name\": \"$agent_name\"}" > /home/$user_name/mess_ros/src/mess_ros/agent.json
+echo "{\"name\": \"$agent_name\"}" > /home/$user_name/mess_ros/agent.json
 #
 echo ""
-echo ">>> {Done: Wrote agent.json to ~/mess_ros/src/mess_ros/}"
+echo ">>> {Done: Wrote agent.json to ~/mess_ros/}"
 echo ""
 echo ""
 echo "#######################################################################################################################"
