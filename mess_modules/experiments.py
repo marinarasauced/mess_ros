@@ -170,7 +170,7 @@ def wait_for_agent_nodes(agents, timeout=30):
         1 if all agents nodes are running, 0 else
     """
 
-    print_task_start("checking if all agent nodes are launched")
+    print_task_start("checking if all agent nodes are launched (may take up to 30 seconds)")
     rate = rospy.Rate(1)
     nodes = []
     for agent in agents:
