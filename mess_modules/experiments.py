@@ -2,25 +2,21 @@
 import rospy
 import rosnode
 
-import datetime
-import os.path
-import re
 import subprocess
 import time
 
 from mess_modules.log2terminal import *
-from mess_modules.paths import get_path2mess_ros
+from mess_modules.paths import get_path2agents, get_path2experiments, get_path2mess_ros
 from mess_modules.roslaunch import ROSLaunch
 from mess_modules.scp import upload
+from mess_modules.ssh import get_client
 
 def run_experiment_setup(ugvs, uavs):
     """
-    Check whether the following conditions have been met.
-    01. /vicon node from vicon_bridge package is running.
-    02. /vicon node is publishing a topic for each ugv in ugvs and uav in uavs.
-    03. The agents have been updated with the current version of mess_ros (from the experiment machine).
-    04. The agents have been launched i.e., their corresponding ROS nodes for this experiment are starting.
-    05. All ROS nodes on all agents are running and ready.
+    
+
+
+
 
     Returns
     -------
@@ -228,8 +224,16 @@ def download_logs(agents, experiment):
     print_task_start("generating write path for current trial")
     write_path = get_write_path(experiment)
     for agent in agents:
-        local_path = f"{write_path}/{agent.name}/"
-        remote_path = "~/mess_ros/logs/"
+        try:
+            print_task_doing(f"downloading logs from {agent.name}")
+            local_path = f"{write_path}/{agent.name}/"
+            remote_path = "~/mess_ros/logs/"
+            download(agent=agent, local_path=local_path, remote_path=remote_path)
+        except:
+            print_task_error(f"unable to download logs from {agent.name}")
+            return 0
+    print_task_done("downloaded logs from all agents")
+    return 1
 
 def get_write_path(experiment):
     """
