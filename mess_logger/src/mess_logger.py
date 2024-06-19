@@ -30,7 +30,6 @@ class LogThisTopic():
         self.topic = topic
         self.msgtype = self.get_topic_type()
         self.cstr = unfold.process(str(self.msgtype), "msg")
-        print(self.cstr)
         self.filepath = self.setup_log()
         rospy.Subscriber(self.topic, eval(self.msgtype), self.callback)
 
@@ -46,7 +45,6 @@ class LogThisTopic():
                 if field_data.startswith("(") and field_data.endswith(")"):
                     field_data = field_data.replace(",", "")
                 list.append(field_data)
-                print(list)
             except Exception as e:
                 list.append("")
             
@@ -122,7 +120,6 @@ def main():
 
     topics = ["/imu", "/odom"]
     loggers = [LogThisTopic(topics[i]) for i in range(len(topics))]
-    print(loggers)
     
     rospy.spin()
 
