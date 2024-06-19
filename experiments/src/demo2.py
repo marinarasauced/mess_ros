@@ -119,9 +119,7 @@ def main(experiment):
         uavs = []
 
         # 04. CONFIGURE AND RUN EXPERIMENT:
-        if not run_experiment_setup(ugvs, uavs):
-            return 0
-        else:
+        if run_experiment_setup(ugvs, uavs):
             run_experiment(burger2, burger3, wafflepi1)
 
         # 05. SHUTDOWN AGENTS AND DOWNLOAD LOGS
