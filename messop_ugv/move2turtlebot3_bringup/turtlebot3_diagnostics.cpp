@@ -212,7 +212,7 @@ std::string readFromJson(const std::string& file_path) {
 
 int main(int argc, char **argv)
 {
-  std::string json_file_path = "/home/ubuntu/mess_ros/src/mess_ros/messop_ugv/agent.json";
+  std::string json_file_path = "/home/ubuntu/mess_ros/agent.json";
   std::string ugv_name = readFromJson(json_file_path);
 
   ros::init(argc, argv, "turtlebot3_diagnostic");
