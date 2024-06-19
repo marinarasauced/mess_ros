@@ -8,6 +8,15 @@ echo "##########################################################################
 echo ""
 echo ">>> {Starting MESS-ROS Configuration}"
 echo ""
+
+#
+echo ""
+echo ">>> {User: Enter desired name for agent}"
+echo ""
+#
+read -p "Enter your agent's name i.e., burger2, hawk2, etc.:" agent_name
+#
+echo ""
 echo ">>> {User: Enter desired turtlebot3 model for configuration}"
 echo ""
 echo "     [1. Burger]"
@@ -137,6 +146,7 @@ echo "##########################################################################
 echo ">>> {Step 2: MESS-ROS Workspace Configuration}"
 echo ""
 echo ">>> {Task: Creating mess_ros workspace}"
+echo ">>> {Note: If you get an error, in a terminal, enter \"/source/opt/ros/noetic/setup.bash\", then rerun this bash script}"
 echo ""
 #
 cd 
@@ -152,7 +162,7 @@ echo ">>> {Done: Created mess_ros workspace}"
 echo ""
 echo ""
 echo "#######################################################################################################################"
-echo ">>> {Step 3: Installing TurtleBot3 Packages}"
+echo ">>> {Step 3: Installing Extra Packages}"
 echo ""
 echo ">>> {Task: Adding turtlebot3 packages to mess_ros workspace}"
 echo ""
@@ -172,6 +182,27 @@ rm -r turtlebot3_description/ turtlebot3_teleop/ turtlebot3_navigation/ turtlebo
 echo ""
 echo ">>> {Done: Added turtlebot3 packages to mess_ros workspace}"
 echo ""
+echo ">>> {Task: Adding mavros packages to mess_ros workspace}"
+echo ""
+#
+sudo apt-get install -y ros-noetic-mavros ros-noetic-mavros-extras ros-noetic-mavros-msgs
+cd
+wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/install_geographiclib_datasets.sh
+sudo bash ./install_geographiclib_datasets.sh
+#
+echo ""
+echo ">>> {Done: Added mavros packages to mess_ros workspace}"
+echo ""
+echo ">>> {Task: Adding ros_msgs_parser package to build}"
+echo ""
+#
+cd
+git clone https://github.com/Vik095/Ros_msgs_parser
+mv /home/$user_name/Ros_msgs_parser /home/$user_name/ros_msgs_parser
+#
+echo ""
+echo ">>> {Done: Added ros_msg_parser package to build}"
+echo ""
 echo ""
 echo "#######################################################################################################################"
 echo ">>> {Step 4: Installing MESS-ROS Packages}"
@@ -182,7 +213,6 @@ echo ""
 cd /home/$user_name/mess_ros/src
 git clone https://github.com/marinarasauced/mess_ros.git
 cd /home/$user_name/mess_ros/src/mess_ros
-rm -r install/ messop_uav/ mess_modules/ experiments/
 #
 echo ""
 echo ">>> {Done: Added mess_ros packages to mess_ros workspace}"
@@ -198,6 +228,14 @@ cp /home/$user_name/mess_ros/src/mess_ros/messop_ugv/move2turtlebot3_bringup/tur
 #
 echo ""
 echo ">>> {Done: Updated turtlebot3_bringup files}"
+echo ""
+echo ">>> {Task: Writing agent.json to ~/mess_ros/src/mess_ros/}"
+echo ""
+#
+echo "{\"name\": \"$agent_name\"}" > /home/$user_name/mess_ros/src/mess_ros/agent.json
+#
+echo ""
+echo ">>> {Done: Wrote agent.json to ~/mess_ros/src/mess_ros/}"
 echo ""
 echo ""
 echo "#######################################################################################################################"
@@ -267,7 +305,7 @@ echo ""
 echo ">>> {Done: Downloaded mess_ros_install_finalize.sh}"
 echo ""
 echo ">>> {User: Reboot needed to finalize network configuration}"
-echo ">>> {User: After reboot, in a terminal, execute "./mess_ros_install_finalize.sh"}"
-echo ">>> {User: In a terminal, execute "sudo reboot"}"
+echo ">>> {User: After the reboot, in a terminal, enter \"ifconifg\"}"
+echo ">>> {User: Then, in a terminal, enter \"./mess_ros_install_finalize.sh\" and enter the wlan0 inet address}"
 echo ""
 echo "#######################################################################################################################"
