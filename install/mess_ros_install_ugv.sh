@@ -143,7 +143,7 @@ echo "##########################################################################
 echo ">>> {Step 2: MESS-ROS Workspace Configuration}"
 echo ""
 echo ">>> {Task: Creating mess_ros workspace}"
-echo ">>> {Note: If you get an error, in a terminal, enter \"/source/opt/ros/noetic/setup.bash\", then rerun this bash script}"
+echo ">>> {Note: If you get an error, in a terminal, enter \"source /opt/ros/noetic/setup.bash\", then rerun this bash script}"
 echo ""
 #
 cd 
