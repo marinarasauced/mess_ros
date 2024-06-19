@@ -49,6 +49,6 @@
     </group>
                 
     <node pkg="turtlebot3_bringup" type="turtlebot3_diagnostics" name="$(arg ugv_name)_turtlebot3_diagnostics" output="screen"/>
-    <node pkg="messop_ugv" type="ugv_control.py" name="$(arg ugv_name)_control" output="screen"/>
+    <node pkg="messop_ugv" type="ugv_vertex.py" name="$(arg ugv_name)_control" output="screen"/>
 
 </launch>

@@ -53,10 +53,10 @@ def main(experiment):
         burger2 = UGVPrimary("burger2", experiment)
 
         # 02. ADD TASKS (ROS NODES):
-        ugv_control_node = ROSNode(
-            package="messop_ugv", node_file="ugv_control.py", node_name="control"
+        ugv_vertex_node = ROSNode(
+            package="messop_ugv", node_file="ugv_vertex.py", node_name="vertex"
         )
-        burger2.add_node(ugv_control_node)
+        burger2.add_node(ugv_vertex_node)
 
         # XX. OPTIONALLY CHANGE CONFIG FILES:
         burger2.write_config_file(

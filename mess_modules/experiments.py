@@ -4,6 +4,7 @@ import rosnode
 
 import datetime
 import os.path
+import re
 import subprocess
 import time
 
@@ -226,6 +227,9 @@ def download_logs(agents, experiment):
 
     print_task_start("generating write path for current trial")
     write_path = get_write_path(experiment)
+    for agent in agents:
+        local_path = f"{write_path}/{agent.name}/"
+        remote_path = "~/mess_ros/logs/"
 
 def get_write_path(experiment):
     """
@@ -238,7 +242,7 @@ def get_write_path(experiment):
 
     Returns
     -------
-    str
+    directory : str
         The absolute path to this trial's write directory.
     """
 
@@ -246,6 +250,8 @@ def get_write_path(experiment):
     date = datetime.datetime.strftime("%Y-m-%d")
     time = datetime.datetime.strftime("%H-%M-%S")
     trial = get_this_trial(local_path, experiment)
+    directory = f"{trial}--{date}--{time}"
+    return directory
 
 
 def get_this_trial(path, experiment):
@@ -272,4 +278,13 @@ def get_this_trial(path, experiment):
         os.makedirs(path2experiment)
         return "0001"
     past_trials = [name for name in os.listdir(path2experiment) if os.path.isdir(os.path.join(path2experiment, name))]
-    
+    last_index = 0
+    for trial in past_trials:
+        match = re.match(r'^(\d+)--', trial)
+        if match:
+            index = int(match.group(1))
+            if index > last_index:
+                last_index = index
+    curr_index = last_index + 1
+    return f"{curr_index:04d}"
+
