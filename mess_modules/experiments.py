@@ -2,21 +2,24 @@
 import rospy
 import rosnode
 
+import datetime
+import os.path
 import subprocess
 import time
 
 from mess_modules.log2terminal import *
-from mess_modules.paths import get_path2agents, get_path2experiments, get_path2mess_ros
+from mess_modules.paths import get_path2mess_ros
 from mess_modules.roslaunch import ROSLaunch
 from mess_modules.scp import upload
-from mess_modules.ssh import get_client
 
 def run_experiment_setup(ugvs, uavs):
     """
-    
-
-
-
+    Check whether the following conditions have been met.
+    01. /vicon node from vicon_bridge package is running.
+    02. /vicon node is publishing a topic for each ugv in ugvs and uav in uavs.
+    03. The agents have been updated with the current version of mess_ros (from the experiment machine).
+    04. The agents have been launched i.e., their corresponding ROS nodes for this experiment are starting.
+    05. All ROS nodes on all agents are running and ready.
 
     Returns
     -------
@@ -206,3 +209,67 @@ def shutdown_ros_except_vicon(experiment):
             killcmd = ["rosnode", "kill", node]
             subprocess.run(killcmd, stdout=subprocess.DEVNULL)
     print_task_done("shut down all ros nodes except /vicon")
+
+def download_logs(agents, experiment):
+    """
+    Download all logs from all agents to ~/mess_ros/logs/experiment-trial-YYYY:MM:DD-HH:MM:SS/agent_name/.
+
+    This function downloads the logs directory aboard each agent at the constant remote path "~/mess_ros/logs/" to subdir for the current trial of any given experiment.
+
+    Parameters
+    ----------
+    agents : List of UGV and UAV Primary class type instances.
+        A list of all ugvs and uavs from the experiment handler.
+    experiment : str
+        The name of the experiment for log path generation.
+    """
+
+    print_task_start("generating write path for current trial")
+    write_path = get_write_path(experiment)
+
+def get_write_path(experiment):
+    """
+    Get the absolute write path to the directory where the current trial's logs will be stored.
+
+    Parameters
+    ----------
+    experiment : str
+        The name of the current experiment i.e., demo1.
+
+    Returns
+    -------
+    str
+        The absolute path to this trial's write directory.
+    """
+
+    local_path = os.path.expanduser("~/mess_ros/logs")
+    date = datetime.datetime.strftime("%Y-m-%d")
+    time = datetime.datetime.strftime("%H-%M-%S")
+    trial = get_this_trial(local_path, experiment)
+
+
+def get_this_trial(path, experiment):
+    """
+    Read all trial directories on the input path and return the index of the current trial.
+
+    This function looks at all directories in the mess_ros/logs/experiment/ directory and returns a string of the next trial i.e., if the last trial's directory started with 0002, this function will return 0003.
+
+    Parameters
+    ----------
+    path : str
+        The absolute path to the logs/ subdir.
+    experiment : str
+        The name of the current experiment.
+
+    Returns
+    -------
+    str
+        The index of the current trial incremented from the highest value in the logs/ subdir.
+    """
+
+    path2experiment = os.path.join(path, experiment)
+    if not os.path.exists(path2experiment):
+        os.makedirs(path2experiment)
+        return "0001"
+    past_trials = [name for name in os.listdir(path2experiment) if os.path.isdir(os.path.join(path2experiment, name))]
+    

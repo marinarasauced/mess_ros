@@ -14,7 +14,7 @@ from mess_modules.log2terminal import *
 from mess_modules.rosnode import ROSNode
 from mess_modules.ugv_primary import UGVPrimary
 
-def run_experiment(burger2):
+def run_experiment(burger2, burger3, wafflepi1):
     """
     
     """
@@ -51,12 +51,16 @@ def main(experiment):
     try:
         # 01. ADD  VEHICLES (PRIMARY INSTANCES):
         burger2 = UGVPrimary("burger2", experiment)
+        burger3 = UGVPrimary("burger3", experiment)
+        wafflepi1 = UGVPrimary("wafflepi1", experiment)
 
         # 02. ADD TASKS (ROS NODES):
         ugv_control_node = ROSNode(
             package="messop_ugv", node_file="ugv_control.py", node_name="control"
         )
         burger2.add_node(ugv_control_node)
+        burger3.add_node(ugv_control_node)
+        wafflepi1.add_node(ugv_control_node)
 
         # XX. OPTIONALLY CHANGE CONFIG FILES:
         burger2.write_config_file(
@@ -68,17 +72,17 @@ def main(experiment):
         )
 
         # 03. CREATE LIST OF AGENTS:
-        ugvs = [burger2]
+        ugvs = [burger2, burger3, wafflepi1]
         uavs = []
 
         # 04. CONFIGURE AND RUN EXPERIMENT:
         if not run_experiment_setup(ugvs, uavs):
             return 0
-        run_experiment(burger2)
+        run_experiment(burger2, burger3, wafflepi1)
 
         # 05. SHUTDOWN AGENTS AND DOWNLOAD LOGS
         shutdown_ros_except_vicon(experiment)
-        download_logs(agents, experiment)
+        download_logs(ugvs + uavs, experiment)
 
     except Exception as e:
         print_task_error(f"{e}")
