@@ -11,7 +11,7 @@ import time
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
-from mess_modules.agents import get_ugv_agent_name
+from mess_modules.agents import get_agent_name
 from mess_modules.paths import get_path2agent
 from mess_modules.quaternions import convert_eul2quat, invert_quat, multiply_quats, average_quats
 from mess_modules.ugv_secondary import UGVSecondary
@@ -128,7 +128,7 @@ def main():
     rospy.sleep(12)  # wait for turtlebot3_bringup (ikr such a bad way to wait)
     rospy.init_node("ugv_calibration")
 
-    ugv = UGVSecondary(get_ugv_agent_name())
+    ugv = UGVSecondary(get_agent_name())
     run_calibration(ugv)
 
 if __name__=="__main__":
