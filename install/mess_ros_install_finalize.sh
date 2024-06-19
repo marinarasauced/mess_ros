@@ -9,8 +9,11 @@ echo ">>> {Step 6: Finalizing ROS Configuration}"
 echo ""
 echo ">>> {Task: Finalizing environment configuration}"
 echo ""
+echo ">>> {User: Enter desired name for agent}"
+echo ""
 #
-ip_address=$(ifconfig wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+read -p "Enter your wlan0 inet address (it will look like 192.168.0.XX:" ip_address
+#
 cd /home/$user_name/mess_ros && catkin_make
 echo "export ROS_MASTER_URI=http://192.168.0.229:11311" >> /home/$user_name/.bashrc
 echo "export ROS_HOSTNAME=${ip_address}" >> /home/$user_name/.bashrc
