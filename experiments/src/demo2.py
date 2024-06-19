@@ -98,12 +98,12 @@ def main(experiment):
         wafflepi1 = UGVPrimary("wafflepi1", experiment)
 
         # 02. ADD TASKS (ROS NODES):
-        ugv_control_node = ROSNode(
-            package="messop_ugv", node_file="ugv_control.py", node_name="control"
+        ugv_vertex_node = ROSNode(
+            package="messop_ugv", node_file="ugv_vertex.py", node_name="control"
         )
-        burger2.add_node(ugv_control_node)
-        burger3.add_node(ugv_control_node)
-        wafflepi1.add_node(ugv_control_node)
+        burger2.add_node(ugv_vertex_node)
+        burger3.add_node(ugv_vertex_node)
+        wafflepi1.add_node(ugv_vertex_node)
 
         # XX. OPTIONALLY CHANGE CONFIG FILES:
         burger2.write_config_file(

@@ -19,7 +19,7 @@ def main():
     """
 
     rospy.sleep(12)  # wait for turtlebot3_bringup (ikr such a bad way to wait)
-    rospy.init_node("ugv_control")
+    rospy.init_node("ugv_vertex")
 
     ugv = UGVSecondary(get_agent_name())
     print("ready")  # do not remove
