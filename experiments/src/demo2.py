@@ -19,16 +19,20 @@ def run_experiment(burger2, burger3, wafflepi1):
     
     """
     burger2_points = np.array([
-        [0.0, 0.0],
-        [0.0, 0.0]
+        [-5, -0.56],
+        [-5, 0.81],
+        [-3.68, 0.81],
+        [-3.68, -0.56]
     ])
     burger3_points = np.array([
-        [0.0, 0.0],
-        [0.0, 0.0]
+        [-0.7, 2.64],
+        [-1.39, 1.96],
+        [-0.35, 1.43]
     ])
     wafflepi1_points = np.array([
-        [0.0, 0.0],
-        [0.0, 0.0]
+        [-2.28, -0.38],
+        [-2.31, 0.657],
+        [-2.36, 2.02],[-2.31, 0.657]
     ])
 
     burger2_counter = 0
@@ -49,36 +53,36 @@ def run_experiment(burger2, burger3, wafflepi1):
             burger2.pub_vertex.publish(msg)
             burger2.status = False
             burger2_counter += 1
-            if burger2_counter > 2:
+            if burger2_counter > len(burger2_points):
                 burger2_counter = 0
 
         # burger3 tasks
-        if burger2.status:
-            print(f"new task: ({burger2_points[burger2_counter, 0]}, {burger2_points[burger2_counter, 1]})")
+        if burger3.status:
+            print(f"new task: ({burger3_points[burger3_counter, 0]}, {burger3_points[burger3_counter, 1]})")
             msg = MESS2UGV()
-            msg.pose.x = burger2_points[burger2_counter, 0]
-            msg.pose.y = burger2_points[burger2_counter, 1]
+            msg.pose.x = burger3_points[burger3_counter, 0]
+            msg.pose.y = burger3_points[burger3_counter, 1]
             msg.pose.theta = 0
             msg.index = 2  # indicate linear translation operations
-            burger2.pub_vertex.publish(msg)
-            burger2.status = False
-            burger2_counter += 1
-            if burger2_counter > 2:
-                burger2_counter = 0
+            burger3.pub_vertex.publish(msg)
+            burger3.status = False
+            burger3_counter += 1
+            if burger3_counter > len(burger3_points):
+                burger3_counter = 0
 
         # wafflepi1 tasks
-        if burger2.status:
-            print(f"new task: ({burger2_points[burger2_counter, 0]}, {burger2_points[burger2_counter, 1]})")
+        if wafflepi1.status:
+            print(f"new task: ({wafflepi1_points[wafflepi1_counter, 0]}, {wafflepi1_points[wafflepi1_counter, 1]})")
             msg = MESS2UGV()
-            msg.pose.x = burger2_points[burger2_counter, 0]
-            msg.pose.y = burger2_points[burger2_counter, 1]
+            msg.pose.x = wafflepi1_points[wafflepi1_counter, 0]
+            msg.pose.y = wafflepi1_points[wafflepi1_counter, 1]
             msg.pose.theta = 0
             msg.index = 2  # indicate linear translation operations
-            burger2.pub_vertex.publish(msg)
-            burger2.status = False
-            burger2_counter += 1
-            if burger2_counter > 2:
-                burger2_counter = 0
+            wafflepi1.pub_vertex.publish(msg)
+            wafflepi1.status = False
+            wafflepi1_counter += 1
+            if wafflepi1_counter > len(wafflepi1_points):
+                wafflepi1_counter = 0
 
         rate.sleep()
 
