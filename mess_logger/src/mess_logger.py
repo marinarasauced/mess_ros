@@ -23,7 +23,10 @@ import shutil
 import sys
 
 sys.path.append((os.path.join(os.path.expanduser("~"), "ros_msgs_parser")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
+
 import breaker as unfold
+from mess_modules.agents import get_agent_name
 
 class LogThisTopic():
     def __init__(self, topic):
@@ -115,7 +118,7 @@ def main():
     This function initializes a ROS logger node for the Modular Experiment Software System. For each topic identified for the current agent, a csv file will be written to the name "/this/is/your/topic" -> "this_is_your_topic.csv."
     """
 
-    rospy.sleep(12)  # wait for other processes to start
+    rospy.sleep(16)  # wait for other processes to start
     rospy.init_node("mess_logger")
     init()
 
