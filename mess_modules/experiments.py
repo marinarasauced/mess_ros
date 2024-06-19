@@ -258,8 +258,8 @@ def get_write_path(experiment):
     """
 
     local_path = os.path.expanduser("~/mess_ros/logs")
-    date = datetime.strftime("%Y-m-%d")
-    time = datetime.strftime("%H-%M-%S")
+    date = datetime.now().strftime("%Y-m-%d")
+    time = datetime.now().strftime("%H-%M-%S")
     trial = get_this_trial(local_path, experiment)
     directory = f"{trial}--{date}--{time}"
     return directory
