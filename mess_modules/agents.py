@@ -159,11 +159,11 @@ def load_calibration(name):
     q_diff.w = data["w"]
     return q_diff
 
-def get_ugv_agent_name():
+def get_agent_name():
     """
     """
 
-    file_path = "/home/ubuntu/mess_ros/src/mess_ros/messop_ugv/agent.json"
+    file_path = "/home/ubuntu/mess_ros/agent.json"
     with open(file_path, "r") as file:
         data = json.load(file)
     return data["name"]
