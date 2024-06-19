@@ -74,7 +74,8 @@ def main(experiment):
         # 04. CONFIGURE AND RUN EXPERIMENT:
         if not run_experiment_setup(ugvs, uavs):
             return 0
-        run_experiment(burger2)
+        else:
+            run_experiment(burger2)
 
         # 05. SHUTDOWN AGENTS AND DOWNLOAD LOGS
         shutdown_ros_except_vicon(experiment)

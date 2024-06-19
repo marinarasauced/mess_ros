@@ -121,11 +121,13 @@ def main(experiment):
         # 04. CONFIGURE AND RUN EXPERIMENT:
         if not run_experiment_setup(ugvs, uavs):
             return 0
-        run_experiment(burger2, burger3, wafflepi1)
+        else:
+            run_experiment(burger2, burger3, wafflepi1)
 
         # 05. SHUTDOWN AGENTS AND DOWNLOAD LOGS
         shutdown_ros_except_vicon(experiment)
         download_logs(ugvs + uavs, experiment)
+
 
     except Exception as e:
         print_task_error(f"{e}")
