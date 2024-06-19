@@ -78,7 +78,7 @@ def main(experiment):
 
         # 05. SHUTDOWN AGENTS AND DOWNLOAD LOGS
         shutdown_ros_except_vicon(experiment)
-        download_logs(agents, experiment)
+        download_logs(ugvs + uavs, experiment)
 
     except Exception as e:
         print_task_error(f"{e}")
