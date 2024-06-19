@@ -115,12 +115,18 @@ def main():
     This function initializes a ROS logger node for the Modular Experiment Software System. For each topic identified for the current agent, a csv file will be written to the name "/this/is/your/topic" -> "this_is_your_topic.csv."
     """
 
+    rospy.sleep(12)  # wait for other processes to start
     rospy.init_node("mess_logger")
     init()
 
-    topics = ["/imu", "/odom"]
+    ns = get_agent_name()
+    topics = []
+    for topic, _ in rospy.get_published_topics():
+        if ns in topic:
+            topics.append(topic)
+
     loggers = [LogThisTopic(topics[i]) for i in range(len(topics))]
-    
+
     rospy.spin()
 
 if __name__=="__main__":
