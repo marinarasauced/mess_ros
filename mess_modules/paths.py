@@ -102,3 +102,14 @@ def write_file2path(path, content):
     with open(path, "w") as file:
         file.write(content)
 
+def get_path2mess_ros():
+    """
+    Get the absolute path to an agents mess_ros/ packages within the src/ directory.
+
+    Returns
+    -------
+    str
+        The absolute path to mess_ros/.
+    """
+
+    return os.path.expanduser("~/mess_ros/src/mess_ros")

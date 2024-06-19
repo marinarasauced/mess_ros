@@ -6,7 +6,7 @@ import subprocess
 import time
 
 from mess_modules.log2terminal import *
-from mess_modules.paths import get_path2agents, get_path2experiments
+from mess_modules.paths import get_path2agents, get_path2experiments, get_path2mess_ros
 from mess_modules.roslaunch import ROSLaunch
 from mess_modules.scp import upload
 from mess_modules.ssh import get_client
@@ -104,14 +104,9 @@ def update_agents(agents):
     for agent in agents:
         try:
             print_task_doing(f"pushing agents/ experiments/ to {agent.name}")
-
-            local_path2agents = get_path2agents()
-            remote_path2agents = "~/mess_ros/src/mess_ros/"
-            upload(agent=agent, local_path=local_path2agents, remote_path=remote_path2agents)
-            
-            local_path2experiments = get_path2experiments()
-            remote_path2experiments = "~/mess_ros/src/mess_ros/"
-            upload(agent=agent, local_path=local_path2experiments, remote_path=remote_path2experiments)
+            local_path = get_path2mess_ros()
+            remote_path = "~/mess_ros/src/mess_ros/"
+            upload(agent=agent, local_path=local_path, remote_path=remote_path)
         except:
             print_task_error(f"unable to update {agent.name}")
             return 0
