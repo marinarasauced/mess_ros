@@ -22,7 +22,7 @@ import os.path
 import shutil
 import sys
 
-sys.path.append((os.path.join(os.path.expanduser("~"), "Ros_msgs")))
+sys.path.append((os.path.join(os.path.expanduser("~"), "ros_msgs_parser")))
 import breaker as unfold
 
 class LogThisTopic():
