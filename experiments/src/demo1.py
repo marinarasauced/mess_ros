@@ -72,18 +72,18 @@ def main(experiment):
         uavs = []
 
         # 04. CONFIGURE AND RUN EXPERIMENT:
-        if run_experiment_setup(ugvs, uavs):
+        status = run_experiment_setup(ugvs, uavs)
+        if status:
             run_experiment(burger2)
 
         # 05. SHUTDOWN AGENTS AND DOWNLOAD LOGS
         shutdown_ros_except_vicon(experiment)
-        download_logs(ugvs + uavs, experiment)
+        if status:
+            download_logs(ugvs + uavs, experiment)
 
     except Exception as e:
         print_task_error(f"{e}")
         rospy.signal_shutdown("")
-
-
 
 if __name__=="__main__":
     experiment = os.path.splitext(os.path.basename(__file__))[0]

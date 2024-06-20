@@ -125,7 +125,7 @@ def main():
     This function initializes a ROS logger node for the Modular Experiment Software System. For each topic identified for the current agent, a csv file will be written to the name "/this/is/your/topic" -> "this_is_your_topic.csv."
     """
 
-    rospy.sleep(16)  # wait for other processes to start
+    rospy.sleep(17)  # wait for other processes to start
     rospy.init_node("mess_logger")
     init()
 

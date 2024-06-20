@@ -1,0 +1,9 @@
+{
+    "name": "burger3",
+    "ip": "192.168.0.197",
+    "username": "ubuntu",
+    "password": "cowlagilab01",
+    "tb3_model": "burger",
+    "lds_model": "LDS-02",
+    "priority": 3
+ }

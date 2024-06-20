@@ -5,6 +5,7 @@ import rosnode
 import datetime
 import os.path
 import re
+import shutil
 import subprocess
 import time
 
@@ -44,7 +45,7 @@ def run_experiment_setup(ugvs, uavs):
     if not launch_agents(ugvs, uavs):
         return 0
     
-    if not wait_for_agent_nodes(agents, timeout=30):
+    if not wait_for_agent_nodes(agents, timeout=40):
         return 0
     
     return 1
@@ -172,7 +173,7 @@ def wait_for_agent_nodes(agents, timeout=30):
         1 if all agents nodes are running, 0 else
     """
 
-    print_task_start("checking if all agent nodes are launched (may take up to 30 seconds)")
+    print_task_start("checking if all agent nodes are launched (may take up to 40 seconds)")
     rate = rospy.Rate(1)
     nodes = []
     for agent in agents:
@@ -181,8 +182,10 @@ def wait_for_agent_nodes(agents, timeout=30):
 
     tic = time.time()
     toc = tic + timeout
+    idx = 1
     while time.time() < toc:
-        print_task_doing("waiting for all agent nodes to fully launch")
+        print_task_doing(f"({idx:02d}/{timeout}) waiting for all agent nodes to fully launch")
+        idx += 1
         running = rosnode.get_node_names()
         status = [1 if node in running else 0 for node in nodes]
         if all(status):
@@ -236,9 +239,15 @@ def download_logs(agents, experiment):
             local_path = os.path.join(os.path.expanduser(f"~/mess_ros/logs/"), f"{experiment}/{write_path}", agent.name)
             if not os.path.exists(local_path):
                 os.makedirs(local_path)
-            print(local_path)
             remote_path = "~/mess_ros/logs/"
             download(agent=agent, local_path=local_path, remote_path=remote_path)
+            sublog = os.path.join(local_path, "logs/")
+            for filename in os.listdir(sublog):
+                source = os.path.join(sublog, filename)
+                if os.path.isfile(source):
+                    target = os.path.join(local_path, filename)
+                    shutil.move(source, target)
+            shutil.rmtree(sublog)
         except:
             print_task_error(f"unable to download logs from {agent.name}")
             return 0
@@ -262,9 +271,9 @@ def get_write_path(experiment):
 
     local_path = os.path.expanduser("~/mess_ros/logs")
     date = datetime.datetime.now().strftime("%Y-%m-%d")
-    time = datetime.datetime.now().strftime("%H-%M-%S")
+    time = datetime.datetime.now().strftime("%H:%M:%S")
     trial = get_this_trial(local_path, experiment)
-    directory = f"{trial}--{date}--{time}"
+    directory = f"{trial}_{date}_{time}"
     return directory
 
 
@@ -294,7 +303,7 @@ def get_this_trial(path, experiment):
     past_trials = [name for name in os.listdir(path2experiment) if os.path.isdir(os.path.join(path2experiment, name))]
     last_index = 0
     for trial in past_trials:
-        match = re.match(r'^(\d+)--', trial)
+        match = re.match(r'^(\d+)_', trial)
         if match:
             index = int(match.group(1))
             if index > last_index:

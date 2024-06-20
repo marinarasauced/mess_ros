@@ -1,6 +1,7 @@
 
 import rospy
 from geometry_msgs.msg import Point, PoseStamped, TransformStamped, Quaternion
+from mavros_msgs.msg import PositionTarget
 from mavros_msgs.srv import CommandBool, CommandBoolRequest, CommandTOL, CommandTOLRequest, SetMode, SetModeRequest
 from mess_msgs.msg import UAVState
 from std_msgs.msg import Bool, Int16
@@ -22,11 +23,17 @@ class UAVSecondary():
         """
 
         self.name = uav_name
-        self.calibration_samples = load_uavsecondary(self.name)
+        self.calibration_samples, self.error_tol = load_uavsecondary(self.name)
         self.q_diff = load_calibration(self.name)
+        self.x_min = -1  # change later so its respective to the env
+        self.x_max = +1  # change later so its respective to the env
+        self.y_min = -1  # change later so its respective to the env
+        self.y_max = +1  # change later so its respective to the env
+        self.z_max = +2  # change later so its respective to the env
 
         # ROS states:
         self.x_global_curr = UAVState()
+        self.x_local_curr = UAVState()
         self.offset = None
 
         # ROS topics:
@@ -36,11 +43,13 @@ class UAVSecondary():
         self.topic_vicon = f"/vicon/{self.name}/{self.name}"
         self.topic_vicon_calibrated = f"/vicon/{self.name}/{self.name}/calibrated"
         self.topic_vision_pose = f"/{self.name}/mavros/vision_pose/pose"
+        self.topic_mavros_setpoint = f"/{self.name}/mavros/setpoint_raw/local"
 
         # ROS publishers and subscribers:
         self.pub_status = rospy.Publisher(self.topic_to_primary, Bool, queue_size=10, latch=True)
         self.pub_vicon_calibrated = rospy.Publisher(self.topic_vicon_calibrated, TransformStamped, queue_size=10)
         self.pub_vision_pose = rospy.Publisher(self.topic_vision_pose, PoseStamped, queue_size=10)
+        self.pub_setpoint = rospy.Publisher(self.topic_mavros_setpoint, PositionTarget, queue_size=10)
         rospy.Subscriber(self.topic_occupancy, Int16, self.callback_occupancy)
         rospy.Subscriber(self.topic_vicon, TransformStamped, self.callback_vicon)
 
@@ -80,6 +89,11 @@ class UAVSecondary():
         q_true = multiply_quats(self.q_diff, q_meas)
         _, _, self.x_global_curr.pose.theta = convert_quat2eul(q_true)
 
+        self.x_global_curr.orientation.x = q_meas.x
+        self.x_global_curr.orientation.y = q_meas.y
+        self.x_global_curr.orientation.z = q_meas.z
+        self.x_global_curr.orientation.w = q_meas.w
+
         if self.offset is None:
             self.offset = Point()
             self.offset.x = -msg.transform.translation.x
@@ -96,6 +110,14 @@ class UAVSecondary():
         local.pose.orientation.z = q_true.z
         local.pose.orientation.w = q_true.w
         self.pub_vision_pose.publish(local)
+
+        self.x_local_curr.translation.x = local.pose.position.x
+        self.x_local_curr.translation.y = local.pose.position.y
+        self.x_local_curr.translation.z = local.pose.position.z
+        self.x_local_curr.orientation.x = local.pose.orientation.x
+        self.x_local_curr.translation.y = local.pose.orientation.y
+        self.x_local_curr.translation.z = local.pose.orientation.z
+        self.x_local_curr.orientation.w = local.pose.orientation.w
 
         ts_true = TransformStamped()
         ts_true.transform.translation.x = self.x_global_curr.pose.x
@@ -176,7 +198,39 @@ class UAVSecondary():
             cmd_takeoff = CommandTOLRequest
             takeoff_request = cmd_takeoff(altitude=altitude, latitude=0, longitude=0, min_pitch=0, yaw=0)
             service_caller = rospy.ServiceProxy(str3, CommandTOL)
-            response = service_caller(takeoff_request)
-            #
+            service_caller(takeoff_request)
+            while abs(self.x_local_curr.z - altitude) > self.error_tol:
+                pass
+            return 1
         except rospy.ServiceException as e:
             print(f"Service call failed: {e}")
+
+    def move2position(self, x, y, z):
+
+
+        if (x > self.x_min) and (x < self.x_max) and (y > self.y_min) and (y < self.y_max) and (z < self.z_max):
+            desired_position = PositionTarget()
+            desired_position.coordinate_frame = desired_position.FRAME_LOCAL_NED
+            desired_position.type_mask = (
+                desired_position.IGNORE_VX,
+                desired_position.IGNORE_VY,
+                desired_position.IGNORE_VZ,
+                desired_position.IGNORE_AFX,
+                desired_position.IGNORE_AFY,
+                desired_position.IGNORE_AFZ,
+                desired_position.FORCE,
+                desired_position.IGNORE_YAW,
+                desired_position.IGNORE_YAW_RATE
+            )
+            desired_position.position.x = x
+            desired_position.position.y = y
+            desired_position.position.z = z
+            desired_position.yaw = 0.0
+
+            rate = rospy.Rate(10)
+            while ((self.x_local_curr.translation.x - x) ** 2 + (self.x_local_curr.translation.y - y) ** 2 + (self.x_local_curr.translation.z - z) ** 2) ** 0.5 > self.error_tol:
+                self.pub_setpoint(desired_position)
+                rate.sleep()
+            return 1
+        else:
+            pass  # destination is not valid

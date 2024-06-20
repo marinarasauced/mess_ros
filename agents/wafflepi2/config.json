@@ -1,0 +1,12 @@
+{
+    "ugv_name": "wafflepi2",
+    "calibration_samples": 1000,
+    "max_lin_vel_ratio": 0.8,
+    "max_ang_vel_ratio": 0.4,
+    "error_tol_tx": 0.02,
+    "error_tol_ty": 0.04,
+    "error_tol_rz": 0.015,
+    "occlusion_tol": 0.1,
+    "k_ty": 4.6,
+    "k_rz": 2.7
+}

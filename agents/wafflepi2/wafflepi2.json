@@ -1,0 +1,9 @@
+{
+    "name": "wafflepi2",
+    "ip": "192.168.0.78",
+    "username": "ubuntu",
+    "password": "cowlagilab01",
+    "tb3_model": "waffle_pi",
+    "lds_model": "LDS-02",
+    "priority": 4
+ }
