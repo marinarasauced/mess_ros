@@ -14,7 +14,7 @@ from mess_modules.log2terminal import *
 from mess_modules.rosnode import ROSNode
 from mess_modules.ugv_primary import UGVPrimary
 
-def run_experiment(burger2, burger3, wafflepi1):
+def run_experiment(burger2, burger3, wafflepi2):
     """
     
     """
@@ -29,15 +29,16 @@ def run_experiment(burger2, burger3, wafflepi1):
         [-1.39, 1.96],
         [-0.35, 1.43]
     ])
-    wafflepi1_points = np.array([
+    wafflepi2_points = np.array([
         [-2.28, -0.38],
         [-2.31, 0.657],
-        [-2.36, 2.02],[-2.31, 0.657]
+        [-2.36, 2.02],
+        [-2.31, 0.657]
     ])
 
     burger2_counter = 0
     burger3_counter = 0
-    wafflepi1_counter = 0
+    wafflepi2_counter = 0
 
     rate = rospy.Rate(20)
     while not rospy.is_shutdown():
@@ -70,19 +71,19 @@ def run_experiment(burger2, burger3, wafflepi1):
             if burger3_counter > len(burger3_points):
                 burger3_counter = 0
 
-        # wafflepi1 tasks
-        if wafflepi1.status:
-            print(f"new task: ({wafflepi1_points[wafflepi1_counter, 0]}, {wafflepi1_points[wafflepi1_counter, 1]})")
+        # wafflepi2 tasks
+        if wafflepi2.status:
+            print(f"new task: ({wafflepi2_points[wafflepi2_counter, 0]}, {wafflepi2_points[wafflepi2_counter, 1]})")
             msg = MESS2UGV()
-            msg.pose.x = wafflepi1_points[wafflepi1_counter, 0]
-            msg.pose.y = wafflepi1_points[wafflepi1_counter, 1]
+            msg.pose.x = wafflepi2_points[wafflepi2_counter, 0]
+            msg.pose.y = wafflepi2_points[wafflepi2_counter, 1]
             msg.pose.theta = 0
             msg.index = 2  # indicate linear translation operations
-            wafflepi1.pub_vertex.publish(msg)
-            wafflepi1.status = False
-            wafflepi1_counter += 1
-            if wafflepi1_counter > len(wafflepi1_points):
-                wafflepi1_counter = 0
+            wafflepi2.pub_vertex.publish(msg)
+            wafflepi2.status = False
+            wafflepi2_counter += 1
+            if wafflepi2_counter > len(wafflepi2_points):
+                wafflepi2_counter = 0
 
         rate.sleep()
 
@@ -95,7 +96,7 @@ def main(experiment):
         # 01. ADD  VEHICLES (PRIMARY INSTANCES):
         burger2 = UGVPrimary("burger2", experiment)
         burger3 = UGVPrimary("burger3", experiment)
-        wafflepi1 = UGVPrimary("wafflepi1", experiment)
+        wafflepi2 = UGVPrimary("wafflepi2", experiment)
 
         # 02. ADD TASKS (ROS NODES):
         ugv_vertex_node = ROSNode(
@@ -103,7 +104,7 @@ def main(experiment):
         )
         burger2.add_node(ugv_vertex_node)
         burger3.add_node(ugv_vertex_node)
-        wafflepi1.add_node(ugv_vertex_node)
+        wafflepi2.add_node(ugv_vertex_node)
 
         # XX. OPTIONALLY CHANGE CONFIG FILES:
         burger2.write_config_file(
@@ -115,13 +116,13 @@ def main(experiment):
         )
 
         # 03. CREATE LIST OF AGENTS:
-        ugvs = [burger2, burger3, wafflepi1]
+        ugvs = [burger2, burger3, wafflepi2]
         uavs = []
 
         # 04. CONFIGURE AND RUN EXPERIMENT:
         status = run_experiment_setup(ugvs, uavs)
         if status:
-            run_experiment(burger2, burger3, wafflepi1)
+            run_experiment(burger2, burger3, wafflepi2)
 
         # 05. SHUTDOWN AGENTS AND DOWNLOAD LOGS
         shutdown_ros_except_vicon(experiment)
