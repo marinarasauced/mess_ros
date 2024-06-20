@@ -19,8 +19,8 @@ def run_experiment(burger2, burger3, wafflepi2):
     
     """
     burger2_points = np.array([
-        [-5, -0.56],
-        [-5, 0.81],
+        [-4.5, -0.25],
+        [-4.5, 0.81],
         [-3.68, 0.81],
         [-3.68, -0.56]
     ])
@@ -30,10 +30,10 @@ def run_experiment(burger2, burger3, wafflepi2):
         [-0.35, 1.43]
     ])
     wafflepi2_points = np.array([
-        [-2.28, -0.38],
-        [-2.31, 0.657],
-        [-2.36, 2.02],
-        [-2.31, 0.657]
+        [-2.30, 0.20],
+        [-2.32, 0.90],
+        [-2.36, 2.17],
+        [-2.32, 0.90],
     ])
 
     burger2_counter = 0
@@ -54,7 +54,7 @@ def run_experiment(burger2, burger3, wafflepi2):
             burger2.pub_vertex.publish(msg)
             burger2.status = False
             burger2_counter += 1
-            if burger2_counter > len(burger2_points):
+            if burger2_counter > len(burger2_points) - 1:
                 burger2_counter = 0
 
         # burger3 tasks
@@ -68,7 +68,7 @@ def run_experiment(burger2, burger3, wafflepi2):
             burger3.pub_vertex.publish(msg)
             burger3.status = False
             burger3_counter += 1
-            if burger3_counter > len(burger3_points):
+            if burger3_counter > len(burger3_points) - 1:
                 burger3_counter = 0
 
         # wafflepi2 tasks
@@ -82,7 +82,7 @@ def run_experiment(burger2, burger3, wafflepi2):
             wafflepi2.pub_vertex.publish(msg)
             wafflepi2.status = False
             wafflepi2_counter += 1
-            if wafflepi2_counter > len(wafflepi2_points):
+            if wafflepi2_counter > len(wafflepi2_points) - 1:
                 wafflepi2_counter = 0
 
         rate.sleep()
@@ -105,15 +105,6 @@ def main(experiment):
         burger2.add_node(ugv_vertex_node)
         burger3.add_node(ugv_vertex_node)
         wafflepi2.add_node(ugv_vertex_node)
-
-        # XX. OPTIONALLY CHANGE CONFIG FILES:
-        burger2.write_config_file(
-            calibration_samples=1000,
-            max_lin_vel_ratio=0.8, max_ang_vel_ratio=0.4,
-            error_tol_tx=0.02, error_tol_ty=0.04, error_tol_rz=0.015,
-            occlusion_tol=0.1, 
-            k_ty=4.6, k_rz=2.7
-        )
 
         # 03. CREATE LIST OF AGENTS:
         ugvs = [burger2, burger3, wafflepi2]

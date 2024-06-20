@@ -20,5 +20,6 @@ include_directories(
 
 catkin_install_python(PROGRAMS
   src/demo1.py
+  src/demo2.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
